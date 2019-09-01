@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">HikingSpots</string>
+    <string name="Login_email">E-Mail</string>
+    <string name="Login_Password">Password</string>
+    <string name="Login_Submit">Sign in</string>
+    <string name="create_new_account">No account yet? Create one</string>
 </resources>
