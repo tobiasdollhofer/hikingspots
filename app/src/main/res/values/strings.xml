@@ -4,4 +4,6 @@
     <string name="Login_Password">Password</string>
     <string name="Login_Submit">Sign in</string>
     <string name="create_new_account">No account yet? Create one</string>
+    <string name="textPasswordConfirm">Confirm Password</string>
+    <string name="SignUp">Sign Up</string>
 </resources>
