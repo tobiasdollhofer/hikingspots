@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
-
+    //TODO: Change If-Structure.
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             mAuth.signOut();

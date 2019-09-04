@@ -32,6 +32,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="59dp" />
 
+            <TextView
+                android:id="@+id/CreateAccountText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/createAccountText" />
+
             <EditText
                 android:id="@+id/Create_Email"
                 android:layout_width="match_parent"

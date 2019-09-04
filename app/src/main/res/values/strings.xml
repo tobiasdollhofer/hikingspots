@@ -6,4 +6,5 @@
     <string name="create_new_account">No account yet? Create one</string>
     <string name="textPasswordConfirm">Confirm Password</string>
     <string name="SignUp">Sign Up</string>
+    <string name="createAccountText">Enter email and password (at least 6 characters) to sign up for HikingSpots!</string>
 </resources>
