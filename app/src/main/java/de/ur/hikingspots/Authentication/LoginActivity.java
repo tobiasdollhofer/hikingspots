@@ -106,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         } else {
                             // If sign in fails, display a message to the user.
 
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, getString(R.string.authFailed),
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         String email = loginEmail.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            loginEmail.setError("Required.");
+            loginEmail.setError(getString(R.string.requiredField));
             valid = false;
         } else {
             loginEmail.setError(null);
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         String password = loginPassword.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            loginPassword.setError("Required.");
+            loginPassword.setError(getString(R.string.requiredField));
             valid = false;
         } else {
             loginPassword.setError(null);

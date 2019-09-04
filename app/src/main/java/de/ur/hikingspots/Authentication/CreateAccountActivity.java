@@ -96,7 +96,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(CreateAccountActivity.this, "Authentication failed.",
+                            Toast.makeText(CreateAccountActivity.this, getString(R.string.authFailed),
                                     Toast.LENGTH_SHORT).show();
                             System.out.println(task.getException());
                             updateUI(null);
@@ -115,7 +115,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
         String emailText = email.getText().toString();
         if (TextUtils.isEmpty(emailText)) {
-            email.setError("Required.");
+            email.setError(getString(R.string.requiredField));
             valid = false;
         } else {
             email.setError(null);
@@ -123,7 +123,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
         String passwordText = password.getText().toString();
         if (TextUtils.isEmpty(passwordText)) {
-            password.setError("Required.");
+            password.setError(getString(R.string.requiredField));
             valid = false;
         } else {
             password.setError(null);
@@ -131,7 +131,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
         String passwordConfirmText = passwordConfirm.getText().toString();
         if (TextUtils.isEmpty(passwordConfirmText)) {
-            passwordConfirm.setError("Required.");
+            passwordConfirm.setError(getString(R.string.requiredField));
             valid = false;
         } else {
             passwordConfirm.setError(null);
@@ -139,14 +139,14 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
         //Uses valid variable to check if fields aren't empty
         if(valid && !passwordText.equals(passwordConfirmText)){
-            password.setError("Password not identical.");
-            passwordConfirm.setError("Password not identical.");
+            password.setError(getString(R.string.passwordNotIdentical));
+            passwordConfirm.setError(getString(R.string.passwordNotIdentical));
             valid = false;
         }
 
         if(valid && passwordText.length() < 6){
-            password.setError("Password is too short.");
-            passwordConfirm.setError("Password is too short.");
+            password.setError(getString(R.string.passwordTooShort));
+            passwordConfirm.setError(getString(R.string.passwordTooShort));
             valid = false;
         }
 

@@ -7,4 +7,8 @@
     <string name="textPasswordConfirm">Confirm Password</string>
     <string name="SignUp">Sign Up</string>
     <string name="createAccountText">Enter email and password (at least 6 characters) to sign up for HikingSpots!</string>
+    <string name="requiredField">Required.</string>
+    <string name="authFailed">Authentication failed.</string>
+    <string name="passwordNotIdentical">Password isn\'t identical.</string>
+    <string name="passwordTooShort">Password is too short.</string>
 </resources>
