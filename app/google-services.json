@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "872268615211",
+    "firebase_url": "https://hikingspots-d0591.firebaseio.com",
+    "project_id": "hikingspots-d0591",
+    "storage_bucket": "hikingspots-d0591.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872268615211:android:0e25c4e7bcd8614e",
+        "android_client_info": {
+          "package_name": "de.ur.hikingspots"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872268615211-299h6nqijb46eorgjipu33bk9l548lpf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.ur.hikingspots",
+            "certificate_hash": "17989868d506f7b11a30bcda7cef6ff90afba6cf"
+          }
+        },
+        {
+          "client_id": "872268615211-vh2spmmbdf9jdop8l0l14o5p85it0onc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFN1rN75PemQ_hnRW71J802SX6ZTx3NlM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "872268615211-vh2spmmbdf9jdop8l0l14o5p85it0onc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
