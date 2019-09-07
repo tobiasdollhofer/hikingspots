@@ -723,6 +723,8 @@ id action_text
 id actions
 id activity_chooser_view_content
 id add
+id add_Button
+id add_photo_button
 id adjust_height
 id adjust_width
 id alertTitle
@@ -747,6 +749,7 @@ id clip_vertical
 id collapseActionView
 id content
 id contentPanel
+id create_button
 id custom
 id customPanel
 id dark
@@ -756,6 +759,8 @@ id dimensions
 id direct
 id disableHome
 id edit_query
+id edit_text_description
+id edit_text_name
 id end
 id end_padder
 id expand_activities_button
@@ -774,6 +779,7 @@ id icon_group
 id icon_only
 id ifRoom
 id image
+id imageVorschau
 id info
 id invisible
 id italic
@@ -783,6 +789,7 @@ id line1
 id line3
 id listMode
 id list_item
+id list_view
 id media_actions
 id message
 id middle
@@ -842,6 +849,8 @@ id text
 id text2
 id textSpacerNoButtons
 id textSpacerNoTitle
+id text_view_description
+id text_view_name
 id time
 id title
 id titleDividerNoCustom
@@ -891,6 +900,7 @@ layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_create_account
 layout activity_main
+layout add_activity_layout
 layout login_layout
 layout notification_action
 layout notification_action_tombstone
@@ -910,6 +920,7 @@ layout notification_template_part_time
 layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
+layout spot_list_item
 layout support_simple_spinner_dropdown_item
 mipmap ic_launcher
 mipmap ic_launcher_round
@@ -956,6 +967,8 @@ string abc_searchview_description_voice
 string abc_shareactionprovider_share_with
 string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
+string add_button_text
+string add_photo_button_text
 string app_name
 string authFailed
 string common_google_play_services_enable_button
@@ -977,8 +990,11 @@ string common_open_on_phone
 string common_signin_button_text
 string common_signin_button_text_long
 string createAccountText
+string create_button_text
 string create_new_account
 string default_web_client_id
+string edit_text_description_hint_text
+string edit_text_name_hint_text
 string firebase_database_url
 string gcm_defaultSenderId
 string google_api_key
@@ -1396,3 +1412,4 @@ styleable Toolbar android_gravity android_minHeight buttonGravity collapseConten
 styleable View android_theme android_focusable paddingEnd paddingStart theme
 styleable ViewBackgroundHelper android_background backgroundTint backgroundTintMode
 styleable ViewStubCompat android_id android_layout android_inflatedId
+xml file_paths
