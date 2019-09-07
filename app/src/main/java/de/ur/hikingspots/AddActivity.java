@@ -49,8 +49,7 @@ public class AddActivity extends AppCompatActivity {
 
     //TODO: Change If-Structure.
     private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            mAuth.signOut();
+        if (user == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }

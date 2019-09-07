@@ -43,9 +43,11 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
-    //TODO: Change If-Structure.
+
+
+    // Function checks if user is signed in. If user isn't signed in, return to LoginActivity.
     private void updateUI(FirebaseUser user) {
-        if (user != null) {
+        if (user == null) {
             mAuth.signOut();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
