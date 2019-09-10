@@ -16,4 +16,6 @@
     <string name="edit_text_name_hint_text">Name of location</string>
     <string name="edit_text_description_hint_text">Description for the location</string>
     <string name="add_photo_button_text">add new photo</string>
+    <string name="map_title">Map</string>
+    <string name="open_map_button">Open Map</string>
 </resources>
