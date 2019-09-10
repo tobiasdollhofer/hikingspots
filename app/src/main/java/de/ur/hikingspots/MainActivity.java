@@ -1,14 +1,15 @@
 package de.ur.hikingspots;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,7 +21,7 @@ import de.ur.hikingspots.Authentication.LoginActivity;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private Button addButton;
+    private Button addButton, openMap;
     private ListView listView;
     private ArrayList<Spot> spotList;
     private PersonalAdapter adapter;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setup(){
         addButton = findViewById(R.id.add_Button);
+        openMap = findViewById(R.id.openMap);
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
         adapter = new PersonalAdapter(this, spotList);
@@ -77,6 +79,15 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });*/
+
+        openMap.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent goToMap = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(goToMap);
+            }
+        });
     }
 
     @Override
