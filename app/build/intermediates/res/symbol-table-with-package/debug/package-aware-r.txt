@@ -779,6 +779,7 @@ id icon_group
 id icon_only
 id ifRoom
 id image
+id imageView
 id imageVorschau
 id info
 id invisible
@@ -971,6 +972,7 @@ string add_button_text
 string add_photo_button_text
 string app_name
 string authFailed
+string change_photo_button_text
 string common_google_play_services_enable_button
 string common_google_play_services_enable_text
 string common_google_play_services_enable_title
@@ -993,6 +995,9 @@ string createAccountText
 string create_button_text
 string create_new_account
 string default_web_client_id
+string dialog_fragment_message
+string dialog_fragment_negative_button_text
+string dialog_fragment_positive_button_text
 string edit_text_description_hint_text
 string edit_text_name_hint_text
 string firebase_database_url
