@@ -2,6 +2,7 @@ package de.ur.hikingspots;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 import de.ur.hikingspots.Authentication.LoginActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogFragmentListener {
 
     private FirebaseAuth mAuth;
     private Button addButton;
@@ -70,13 +71,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(goToAddActivity, Constants.REQUEST_CODE_FOR_ADD_ACTIVITY);
             }
         });
-        /* TODO: implement functions
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                DialogFragment dialog = DeleteDialogFragment.newInstance(position, spotList.get(position).getSpotName());
+                dialog.show(getSupportFragmentManager(),Constants.DIALOG_TAG_DELETE);
                 return false;
             }
-        });*/
+        });
+    }
+
+    @Override
+    public void onDialogPositiveClick(int position){
+        spotList.remove(position);
+        adapter.notifyDataSetChanged();
     }
 
     @Override

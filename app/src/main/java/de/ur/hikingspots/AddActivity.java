@@ -1,6 +1,8 @@
 package de.ur.hikingspots;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -89,7 +91,7 @@ public class AddActivity extends AppCompatActivity {
             else {
                 spotDescription = null;
             }
-            Spot spot = new Spot(this, spotName, spotDescription);
+            Spot spot = new Spot(this, spotName, spotDescription, currentPhotoPath);
             Intent resultIntent = new Intent();
             resultIntent.putExtra(Constants.KEY_RESULT_SPOT, spot);
             setResult(RESULT_OK, resultIntent);
@@ -128,7 +130,9 @@ public class AddActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if ((requestCode == Constants.REQUEST_CODE_FOR_PHOTO) && (resultCode == RESULT_OK)){
-
+            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+            imageVorschau.setImageBitmap(bitmap);
+            photoButton.setText(R.string.change_photo_button_text);
         }
     }
 }
