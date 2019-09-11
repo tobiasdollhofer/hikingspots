@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 
 import de.ur.hikingspots.Authentication.LoginActivity;
+import de.ur.hikingspots.DataStorage.UploadSpot;
 
 public class MainActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogFragmentListener {
 
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
             Bundle extras = data.getExtras();
             Spot newSpot = (Spot) extras.getParcelable(Constants.KEY_RESULT_SPOT);
             spotList.add(newSpot);
+            new UploadSpot().execute(newSpot);
             adapter.notifyDataSetChanged();
         }
     }
