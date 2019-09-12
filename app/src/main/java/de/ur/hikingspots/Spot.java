@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.core.app.ActivityCompat;
+
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class Spot implements Parcelable {
@@ -17,13 +20,24 @@ public class Spot implements Parcelable {
     private String spotDescription;
     private Location spotLocation;
     private String currentPhotoPath;
+    private int spotPublic;
+    private FirebaseUser ownerOfSpot;
+    Uri photoURI;
 
-    public Spot(Context context, String spotName, String spotDescription, String currentPhotoPath){
+    public Spot(Context context, String spotName, String spotDescription, String currentPhotoPath, boolean spotPublic, FirebaseUser ownerOfSpot, Uri photoURI){
         this.context = context;
         this.spotName = spotName;
         this.spotDescription = spotDescription;
         this.currentPhotoPath = currentPhotoPath;
+        if (spotPublic == true){
+            this.spotPublic = Constants.SPOT_IS_PUBLIC;
+        }
+        else {
+            this.spotPublic = Constants.SPOT_IS_PRIVATE;
+        }
         spotLocation = createLocation();
+        this.ownerOfSpot = ownerOfSpot;
+        this.photoURI = photoURI;
     }
 
     protected Spot(Parcel in) {
@@ -31,6 +45,9 @@ public class Spot implements Parcelable {
         spotDescription = in.readString();
         currentPhotoPath = in.readString();
         spotLocation = in.readParcelable(Location.class.getClassLoader());
+        spotPublic = in.readInt();
+        ownerOfSpot = in.readParcelable(FirebaseUser.class.getClassLoader());
+        photoURI = in.readParcelable(Uri.class.getClassLoader());
     }
 
     public static final Creator<Spot> CREATOR = new Creator<Spot>() {
@@ -56,6 +73,9 @@ public class Spot implements Parcelable {
         dest.writeString(spotDescription);
         dest.writeString(currentPhotoPath);
         dest.writeParcelable(spotLocation, flags);
+        dest.writeInt(spotPublic);
+        dest.writeParcelable(ownerOfSpot, flags);
+        dest.writeParcelable(photoURI, flags);
     }
 
     public String getSpotName() {
@@ -72,6 +92,18 @@ public class Spot implements Parcelable {
 
     public String getCurrentPhotoPath(){
         return currentPhotoPath;
+    }
+
+    public int getSpotPublic(){
+        return spotPublic;
+    }
+
+    public FirebaseUser getOwnerOfSpot(){
+        return ownerOfSpot;
+    }
+
+    public Uri getPhotoURI(){
+        return photoURI;
     }
 
     private Location createLocation(){

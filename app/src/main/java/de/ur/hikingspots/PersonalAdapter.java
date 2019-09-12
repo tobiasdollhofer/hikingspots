@@ -10,17 +10,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 
 public class PersonalAdapter extends ArrayAdapter<Spot> {
 
     private ArrayList<Spot> spotList;
     private Context context;
+    private FirebaseUser currentUser;
 
-    public PersonalAdapter(Context context, ArrayList<Spot> spotList){
+    public PersonalAdapter(Context context, ArrayList<Spot> spotList, FirebaseUser currentUser){
         super(context, R.layout.spot_list_item, spotList);
         this.spotList = spotList;
         this.context = context;
+        this.currentUser = currentUser;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class PersonalAdapter extends ArrayAdapter<Spot> {
             TextView name = v.findViewById(R.id.text_view_name);
             TextView description = v.findViewById(R.id.text_view_description);
             ImageView imageView = v.findViewById(R.id.imageView);
+            TextView textViewOwnerOfSpot = v.findViewById(R.id.text_view_owner);
             name.setText(spot.getSpotName());
             if (spot.getCurrentPhotoPath() != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(spot.getCurrentPhotoPath());
@@ -45,6 +50,12 @@ public class PersonalAdapter extends ArrayAdapter<Spot> {
                 imageView.setImageResource(android.R.color.transparent);
             }
             description.setText(spot.getSpotDescription());
+            if (currentUser.getEmail().equals(spot.getOwnerOfSpot().getEmail())){
+                textViewOwnerOfSpot.setText(R.string.personal_adapter_your_spot);
+            }
+            else {
+                textViewOwnerOfSpot.setText(R.string.personal_adapter_other_spot);
+            }
         }
         return v;
     }
