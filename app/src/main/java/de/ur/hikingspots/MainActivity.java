@@ -88,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
             @Override
             public void onClick(View v) {
                 Intent goToMap = new Intent(MainActivity.this, MapsActivity.class);
-                //     goToMap.putExtra("Latitude", getLocation().getLatitude());
-                //      goToMap.putExtra("Longitude", getLocation().getLongitude());
                 startActivity(goToMap);
             }
         });
