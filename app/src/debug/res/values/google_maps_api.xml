@@ -4,7 +4,7 @@
 
     To get one, follow this link, follow the directions and press "Create" at the end:
 
-    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=64:A7:00:2F:A0:3A:04:2D:94:BB:60:F0:21:A4:5A:A1:48:DF:68:94%3Bde.ur.hikingspots
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=64:A7:00:2F:A0:3A:04:2D:94:BB:60:F0:21:A4:5A:A1:48:DF:68:94%3Bde.ur.hikingspots.Map
 
     You can also add your credentials to an existing key, using these values:
 

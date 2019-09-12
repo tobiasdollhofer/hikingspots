@@ -7,7 +7,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.core.app.ActivityCompat;
 
 
@@ -17,17 +16,20 @@ public class Spot implements Parcelable {
     private String spotName;
     private String spotDescription;
     private Location spotLocation;
+    private String currentPhotoPath;
 
-    public Spot(Context context, String spotName, String spotDescription){
+    public Spot(Context context, String spotName, String spotDescription, String currentPhotoPath){
         this.context = context;
         this.spotName = spotName;
         this.spotDescription = spotDescription;
+        this.currentPhotoPath = currentPhotoPath;
         spotLocation = createLocation();
     }
 
     protected Spot(Parcel in) {
         spotName = in.readString();
         spotDescription = in.readString();
+        currentPhotoPath = in.readString();
         spotLocation = in.readParcelable(Location.class.getClassLoader());
     }
 
@@ -52,6 +54,7 @@ public class Spot implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(spotName);
         dest.writeString(spotDescription);
+        dest.writeString(currentPhotoPath);
         dest.writeParcelable(spotLocation, flags);
     }
 
@@ -65,6 +68,10 @@ public class Spot implements Parcelable {
 
     public Location getSpotLocation() {
         return spotLocation;
+    }
+
+    public String getCurrentPhotoPath(){
+        return currentPhotoPath;
     }
 
     private Location createLocation(){

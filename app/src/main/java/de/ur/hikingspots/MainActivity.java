@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,8 +18,10 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 
 import de.ur.hikingspots.Authentication.LoginActivity;
+import de.ur.hikingspots.DataStorage.UploadSpot;
+import de.ur.hikingspots.Map.MapsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogFragmentListener {
 
     private FirebaseAuth mAuth;
     private Button addButton, openMap;
@@ -30,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
-        getSupportActionBar().hide(); // hide the title bar
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
         setup();
@@ -72,22 +74,31 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(goToAddActivity, Constants.REQUEST_CODE_FOR_ADD_ACTIVITY);
             }
         });
-        /* TODO: implement functions
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                DialogFragment dialog = DeleteDialogFragment.newInstance(position, spotList.get(position).getSpotName());
+                dialog.show(getSupportFragmentManager(),Constants.DIALOG_TAG_DELETE);
                 return false;
             }
-        });*/
+        });
 
         openMap.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
                 Intent goToMap = new Intent(MainActivity.this, MapsActivity.class);
+                //     goToMap.putExtra("Latitude", getLocation().getLatitude());
+                //      goToMap.putExtra("Longitude", getLocation().getLongitude());
                 startActivity(goToMap);
             }
         });
+    }
+
+    @Override
+    public void onDialogPositiveClick(int position){
+        spotList.remove(position);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -96,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Spot newSpot = (Spot) extras.getParcelable(Constants.KEY_RESULT_SPOT);
             spotList.add(newSpot);
+            new UploadSpot().execute(newSpot);
             adapter.notifyDataSetChanged();
         }
     }
