@@ -20,4 +20,7 @@
     <string name="dialog_fragment_message">Do you want to delete</string>
     <string name="dialog_fragment_positive_button_text">Delete</string>
     <string name="dialog_fragment_negative_button_text">Cancel</string>
+    <string name="add_activity_switch">make your spot public</string>
+    <string name="personal_adapter_your_spot">this is your spot</string>
+    <string name="personal_adapter_other_spot">this is a spot from another person</string>
 </resources>

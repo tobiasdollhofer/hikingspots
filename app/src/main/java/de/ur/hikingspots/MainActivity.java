@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         addButton = findViewById(R.id.add_Button);
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
-        adapter = new PersonalAdapter(this, spotList);
+        adapter = new PersonalAdapter(this, spotList, mAuth.getCurrentUser());
         listView.setAdapter(adapter);
     }
 

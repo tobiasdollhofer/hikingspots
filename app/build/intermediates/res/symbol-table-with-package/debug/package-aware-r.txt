@@ -1166,7 +1166,7 @@ id icon_only
 id ifRoom
 id image
 id imageView
-id imageVorschau
+id image_preview
 id info
 id invisible
 id italic
@@ -1204,6 +1204,7 @@ id percent
 id pin
 id progress_circular
 id progress_horizontal
+id public_private_switch
 id radio
 id right
 id right_icon
@@ -1262,6 +1263,7 @@ id textStart
 id text_input_password_toggle
 id text_view_description
 id text_view_name
+id text_view_owner
 id textinput_counter
 id textinput_error
 id textinput_helper_text
@@ -1410,6 +1412,7 @@ string abc_searchview_description_voice
 string abc_shareactionprovider_share_with
 string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
+string add_activity_switch
 string add_button_text
 string add_photo_button_text
 string app_name
@@ -1463,6 +1466,8 @@ string path_password_eye
 string path_password_eye_mask_strike_through
 string path_password_eye_mask_visible
 string path_password_strike_through
+string personal_adapter_other_spot
+string personal_adapter_your_spot
 string project_id
 string requiredField
 string search_menu_title
