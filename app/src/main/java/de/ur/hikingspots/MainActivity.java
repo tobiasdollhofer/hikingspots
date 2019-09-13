@@ -19,11 +19,12 @@ import java.util.ArrayList;
 
 import de.ur.hikingspots.Authentication.LoginActivity;
 import de.ur.hikingspots.DataStorage.UploadSpot;
+import de.ur.hikingspots.Map.MapsActivity;
 
 public class MainActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogFragmentListener {
 
     private FirebaseAuth mAuth;
-    private Button addButton;
+    private Button addButton, openMap;
     private ListView listView;
     private ArrayList<Spot> spotList;
     private PersonalAdapter adapter;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
 
     private void setup(){
         addButton = findViewById(R.id.add_Button);
+        openMap = findViewById(R.id.openMap);
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
         adapter = new PersonalAdapter(this, spotList, mAuth.getCurrentUser());
@@ -78,6 +80,16 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                 DialogFragment dialog = DeleteDialogFragment.newInstance(position, spotList.get(position).getSpotName());
                 dialog.show(getSupportFragmentManager(),Constants.DIALOG_TAG_DELETE);
                 return false;
+            }
+        });
+
+        openMap.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent goToMap = new Intent(MainActivity.this, MapsActivity.class);
+                goToMap.putParcelableArrayListExtra("spot", spotList);
+                startActivity(goToMap);
             }
         });
     }

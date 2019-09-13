@@ -14,6 +14,15 @@
         android:layout_height="wrap_content"
         android:text="@string/add_button_text"/>
 
+    <Button
+        android:id="@+id/openMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/open_map_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_Button" />
+
     <ListView
         android:id="@+id/list_view"
         android:layout_width="0dp"
@@ -21,7 +30,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_Button"></ListView>
+        app:layout_constraintTop_toBottomOf="@+id/openMap"></ListView>
 
 
 
