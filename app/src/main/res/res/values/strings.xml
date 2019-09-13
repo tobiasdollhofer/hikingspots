@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">HikingSpots</string>
+    <string name="Login_email">E-Mail</string>
+    <string name="Login_Password">Password</string>
+    <string name="Login_Submit">Sign in</string>
+    <string name="create_new_account">No account yet? Create one</string>
+    <string name="textPasswordConfirm">Confirm Password</string>
+    <string name="SignUp">Sign Up</string>
+    <string name="createAccountText">Enter email and password (at least 6 characters) to sign up for HikingSpots!</string>
+    <string name="requiredField">Required.</string>
+    <string name="authFailed">Authentication failed.</string>
+    <string name="passwordNotIdentical">Password isn\'t identical.</string>
+    <string name="passwordTooShort">Password is too short.</string>
+    <string name="add_button_text">add</string>
+    <string name="create_button_text">CREATE NEW LOCATION</string>
+    <string name="edit_text_name_hint_text">Name of location</string>
+    <string name="edit_text_description_hint_text">Description for the location</string>
+    <string name="add_photo_button_text">add new photo</string>
+    <string name="change_photo_button_text">change picture</string>
+    <string name="dialog_fragment_message">Do you want to delete</string>
+    <string name="dialog_fragment_positive_button_text">Delete</string>
+    <string name="dialog_fragment_negative_button_text">Cancel</string>
+    <string name="add_activity_switch">make your spot public</string>
+    <string name="personal_adapter_your_spot">this is your spot</string>
+    <string name="personal_adapter_other_spot">this is a spot from another person</string>
+    <string name="map_title">Map</string>
+    <string name="open_map_button">Open Map</string>
+</resources>
