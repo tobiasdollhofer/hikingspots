@@ -1,13 +1,17 @@
 package de.ur.hikingspots;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.core.app.ActivityCompat;
+
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class Spot implements Parcelable {
@@ -17,13 +21,24 @@ public class Spot implements Parcelable {
     private String spotDescription;
     private Location spotLocation;
     private String currentPhotoPath;
+    private int spotPublic;
+    private FirebaseUser ownerOfSpot;
+    Uri photoURI;
 
-    public Spot(Context context, String spotName, String spotDescription, String currentPhotoPath){
+    public Spot(Context context, String spotName, String spotDescription, String currentPhotoPath, boolean spotPublic, FirebaseUser ownerOfSpot, Uri photoURI){
         this.context = context;
         this.spotName = spotName;
         this.spotDescription = spotDescription;
         this.currentPhotoPath = currentPhotoPath;
-        spotLocation = createLocation();
+        if (spotPublic == true){
+            this.spotPublic = Constants.SPOT_IS_PUBLIC;
+        }
+        else {
+            this.spotPublic = Constants.SPOT_IS_PRIVATE;
+        }
+        createLocation();
+        this.ownerOfSpot = ownerOfSpot;
+        this.photoURI = photoURI;
     }
 
     protected Spot(Parcel in) {
@@ -31,6 +46,9 @@ public class Spot implements Parcelable {
         spotDescription = in.readString();
         currentPhotoPath = in.readString();
         spotLocation = in.readParcelable(Location.class.getClassLoader());
+        spotPublic = in.readInt();
+        ownerOfSpot = in.readParcelable(FirebaseUser.class.getClassLoader());
+        photoURI = in.readParcelable(Uri.class.getClassLoader());
     }
 
     public static final Creator<Spot> CREATOR = new Creator<Spot>() {
@@ -56,6 +74,9 @@ public class Spot implements Parcelable {
         dest.writeString(spotDescription);
         dest.writeString(currentPhotoPath);
         dest.writeParcelable(spotLocation, flags);
+        dest.writeInt(spotPublic);
+        dest.writeParcelable(ownerOfSpot, flags);
+        dest.writeParcelable(photoURI, flags);
     }
 
     public String getSpotName() {
@@ -74,15 +95,52 @@ public class Spot implements Parcelable {
         return currentPhotoPath;
     }
 
-    private Location createLocation(){
-        Location currentLocation;
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            currentLocation = null;
+    public int getSpotPublic(){
+        return spotPublic;
+    }
+
+    public FirebaseUser getOwnerOfSpot(){
+        return ownerOfSpot;
+    }
+
+    public Uri getPhotoURI(){
+        return photoURI;
+    }
+
+    private void createLocation(){
+        if (checkLocationPermission()){
+            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            spotLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
         else {
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            askForPermission();
         }
-        return currentLocation;
+    }
+
+    private void askForPermission(){
+        ActivityCompat.requestPermissions((Activity) context,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (checkLocationPermission()){
+                        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                        spotLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    }
+                } else {
+                   spotLocation = null;
+                }
+                return;
+            }
+        }
+    }
+
+    public boolean checkLocationPermission(){
+        String permission = "android.permission.ACCESS_FINE_LOCATION";
+        int res = context.checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 }

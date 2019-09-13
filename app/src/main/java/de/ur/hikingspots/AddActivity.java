@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,8 +31,10 @@ public class AddActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Button createButton, photoButton;
     private EditText nameEditText, descriptionEditText;
-    private ImageView imageVorschau;
+    private ImageView imagePreview;
+    private Switch publicPrivateSwitch;
     private String currentPhotoPath;
+    private Uri photoURISpot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,8 @@ public class AddActivity extends AppCompatActivity {
         photoButton = findViewById(R.id.add_photo_button);
         nameEditText = findViewById(R.id.edit_text_name);
         descriptionEditText = findViewById(R.id.edit_text_description);
-        imageVorschau = findViewById(R.id.imageVorschau);
+        imagePreview = findViewById(R.id.image_preview);
+        publicPrivateSwitch = findViewById(R.id.public_private_switch);
     }
 
     private void setupOnClickListeners(){
@@ -83,6 +87,7 @@ public class AddActivity extends AppCompatActivity {
     private void getDataAndClose(){
         String spotName;
         String spotDescription;
+        boolean spotPublic = publicPrivateSwitch.isChecked();
         if (!nameEditText.getText().toString().equals("")){
             spotName = nameEditText.getText().toString().trim();
             if (!descriptionEditText.getText().toString().equals("")){
@@ -91,7 +96,7 @@ public class AddActivity extends AppCompatActivity {
             else {
                 spotDescription = null;
             }
-            Spot spot = new Spot(this, spotName, spotDescription, currentPhotoPath);
+            Spot spot = new Spot(this, spotName, spotDescription, currentPhotoPath, spotPublic, mAuth.getCurrentUser(), photoURISpot);
             Intent resultIntent = new Intent();
             resultIntent.putExtra(Constants.KEY_RESULT_SPOT, spot);
             setResult(RESULT_OK, resultIntent);
@@ -112,6 +117,7 @@ public class AddActivity extends AppCompatActivity {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileProvider",
                         photoFile);
+                photoURISpot = photoURI;
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, Constants.REQUEST_CODE_FOR_PHOTO);
             }
@@ -131,7 +137,7 @@ public class AddActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if ((requestCode == Constants.REQUEST_CODE_FOR_PHOTO) && (resultCode == RESULT_OK)){
             Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
-            imageVorschau.setImageBitmap(bitmap);
+            imagePreview.setImageBitmap(bitmap);
             photoButton.setText(R.string.change_photo_button_text);
         }
     }

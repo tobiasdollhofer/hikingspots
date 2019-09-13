@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         openMap = findViewById(R.id.openMap);
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
-        adapter = new PersonalAdapter(this, spotList);
+        adapter = new PersonalAdapter(this, spotList, mAuth.getCurrentUser());
         listView.setAdapter(adapter);
     }
 
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
             @Override
             public void onClick(View v) {
                 Intent goToMap = new Intent(MainActivity.this, MapsActivity.class);
+                goToMap.putParcelableArrayListExtra("spot", spotList);
                 startActivity(goToMap);
             }
         });
