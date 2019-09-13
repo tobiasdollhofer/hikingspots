@@ -28,4 +28,5 @@
     <string name="toast_GPS_permission">location permission is necessary to create a spot</string>
     <string name="map_title">Map</string>
     <string name="open_map_button">Open Map</string>
+    <string name="signup_Username">Enter a username</string>
 </resources>
