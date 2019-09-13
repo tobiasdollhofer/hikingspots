@@ -1,5 +1,6 @@
 package de.ur.hikingspots;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -77,8 +79,13 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                DialogFragment dialog = DeleteDialogFragment.newInstance(position, spotList.get(position).getSpotName());
-                dialog.show(getSupportFragmentManager(),Constants.DIALOG_TAG_DELETE);
+                if (mAuth.getCurrentUser().getEmail().equals(spotList.get(position).getOwnerOfSpot().getEmail())) {
+                    DialogFragment dialog = DeleteDialogFragment.newInstance(position, spotList.get(position).getSpotName());
+                    dialog.show(getSupportFragmentManager(), Constants.DIALOG_TAG_DELETE);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.toast_not_your_spot), Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }
         });

@@ -1,19 +1,26 @@
 package de.ur.hikingspots;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -90,22 +97,66 @@ public class AddActivity extends AppCompatActivity {
         boolean spotPublic = publicPrivateSwitch.isChecked();
         if (!nameEditText.getText().toString().equals("")){
             spotName = nameEditText.getText().toString().trim();
+            Location spotLocation = createLocation();
             if (!descriptionEditText.getText().toString().equals("")){
                 spotDescription = descriptionEditText.getText().toString().trim();
             }
             else {
                 spotDescription = null;
             }
-            Spot spot = new Spot(this, spotName, spotDescription, currentPhotoPath, spotPublic, mAuth.getCurrentUser(), photoURISpot);
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra(Constants.KEY_RESULT_SPOT, spot);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+            Spot spot = new Spot(this, spotName, spotDescription, currentPhotoPath, spotPublic, mAuth.getCurrentUser(), photoURISpot, spotLocation);
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra( Constants.KEY_RESULT_SPOT, spot);
+                setResult(RESULT_OK, resultIntent);
+                finish();
         }
         else {
-
+            Toast.makeText(this, getString(R.string.toast_no_name), Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+
+    private Location createLocation(){
+        if (checkLocationPermission()){
+            Location spotLocation;
+            LocationManager locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+            spotLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            return spotLocation;
+        }
+        else {
+            askForPermission();
+            return null;
+        }
+    }
+
+    private void askForPermission(){
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    createLocation();
+                } else {
+                    Toast.makeText(this, R.string.toast_GPS_permission, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private boolean checkLocationPermission(){
+        String permission = "android.permission.ACCESS_FINE_LOCATION";
+        int res = this.checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+
+
 
     private void takePicture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -132,6 +183,9 @@ public class AddActivity extends AppCompatActivity {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){

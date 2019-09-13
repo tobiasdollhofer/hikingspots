@@ -23,6 +23,9 @@
     <string name="add_activity_switch">make your spot public</string>
     <string name="personal_adapter_your_spot">this is your spot</string>
     <string name="personal_adapter_other_spot">this is a spot from another person</string>
+    <string name="toast_no_name">spots must have a name</string>
+    <string name="toast_not_your_spot">your only can delete your own spots</string>
+    <string name="toast_GPS_permission">location permission is necessary to create a spot</string>
     <string name="map_title">Map</string>
     <string name="open_map_button">Open Map</string>
 </resources>
