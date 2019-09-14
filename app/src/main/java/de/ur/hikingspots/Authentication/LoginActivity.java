@@ -1,147 +1,90 @@
 package de.ur.hikingspots.Authentication;
 
 
-import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+
+import androidx.viewpager.widget.ViewPager;
+
 import android.os.Bundle;
-import android.text.TextUtils;
+
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.material.tabs.TabLayout;
 
 
-import de.ur.hikingspots.MainActivity;
+import java.util.ArrayList;
+
 import de.ur.hikingspots.R;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends FragmentActivity{
 
-    private FirebaseAuth mAuth;
-    private EditText loginEmail;
-    private EditText loginPassword;
-    private Button loginButton;
-    private TextView loginCreateAccount;
+    private TabLayout tabLayout;
+    public ViewPager viewPager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        tabLayout = findViewById(R.id.tabs);
+        tabLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
+            }
+        });
+        viewPager = findViewById(R.id.logincontainer);
+        setupViewPager(viewPager);
 
-        setContentView(R.layout.login_layout);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+        });
 
-        loginEmail = findViewById(R.id.Login_Email);
-        loginEmail.setOnClickListener(this);
 
-        loginPassword = findViewById(R.id.Login_Password);
-        loginPassword.setOnClickListener(this);
+    }
 
-        loginButton = findViewById(R.id.Login_Button);
-        loginButton.setOnClickListener(this);
-
-        loginCreateAccount = findViewById(R.id.Login_CreateNewAccount);
-        loginCreateAccount.setOnClickListener(this);
-
-        mAuth = FirebaseAuth.getInstance();
+    private void setupViewPager(ViewPager viewPager){
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new LoginFragment(), "login");
+        adapter.addFragment(new SignupFragment(), "signup");
+        viewPager.setAdapter(adapter);
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if(id == R.id.Login_Button){
-            signIn(loginEmail.getText().toString(), loginPassword.getText().toString());
-        }else if(id == R.id.Login_CreateNewAccount){
-            Intent intent = new Intent(this, CreateAccountActivity.class);
-            startActivity(intent);
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final ArrayList<Fragment> mFragmentList = new ArrayList<Fragment>();
+        private final ArrayList<String> mFragmentTitleList = new ArrayList<String>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
         }
     }
-
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-    }
-
-
-    /**
-     * From: https://github.com/firebase/quickstart-android/blob/0f17b14ce785cf2b77e358154d987ecc30269616/auth/app/src/main/java/com/google/firebase/quickstart/auth/java/EmailPasswordActivity.java
-     * @param email E-Mail-Address for Login
-     * @param password Password for Login
-     */
-    private void signIn(String email, String password) {
-        if (!validateForm()) {
-            return;
-        }
-
-        // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-
-                            Toast.makeText(LoginActivity.this, getString(R.string.authFailed),
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-
-                        // [START_EXCLUDE]
-                        /*if (!task.isSuccessful()) {
-                            mStatusTextView.setText(R.string.auth_failed);
-                        }*/
-                        // [END_EXCLUDE]
-                    }
-                });
-        // [END sign_in_with_email]
-    }
-
-    /**
-     * From: https://github.com/firebase/quickstart-android/blob/0f17b14ce785cf2b77e358154d987ecc30269616/auth/app/src/main/java/com/google/firebase/quickstart/auth/java/EmailPasswordActivity.java
-     * @return Boolean value if Form is filled.
-     */
-    private boolean validateForm() {
-        boolean valid = true;
-
-        String email = loginEmail.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            loginEmail.setError(getString(R.string.requiredField));
-            valid = false;
-        } else {
-            loginEmail.setError(null);
-        }
-
-        String password = loginPassword.getText().toString();
-        if (TextUtils.isEmpty(password)) {
-            loginPassword.setError(getString(R.string.requiredField));
-            valid = false;
-        } else {
-            loginPassword.setError(null);
-        }
-
-        return valid;
-    }
-
 }

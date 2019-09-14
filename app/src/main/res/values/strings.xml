@@ -12,7 +12,7 @@
     <string name="passwordNotIdentical">Password isn\'t identical.</string>
     <string name="passwordTooShort">Password is too short.</string>
     <string name="add_button_text">add</string>
-    <string name="create_button_text">Save Spot</string>
+    <string name="create_button_text">CREATE NEW LOCATION</string>
     <string name="edit_text_name_hint_text">Name of location</string>
     <string name="edit_text_description_hint_text">Description for the location</string>
     <string name="add_photo_button_text">add new photo</string>
@@ -21,15 +21,13 @@
     <string name="dialog_fragment_positive_button_text">Delete</string>
     <string name="dialog_fragment_negative_button_text">Cancel</string>
     <string name="add_activity_switch">make your spot public</string>
-    <string name="personal_adapter_your_spot_public">public</string>
-    <string name="personal_adapter_your_spot_private">private</string>
+    <string name="personal_adapter_your_spot">this is your spot</string>
     <string name="personal_adapter_other_spot">this is a spot from another person</string>
     <string name="toast_no_name">spots must have a name</string>
-    <string name="toast_not_your_spot_delete">your only can delete your own spots</string>
-    <string name="toast_not_your_spot_edit">your only can edit your own spots</string>
+    <string name="toast_not_your_spot">your only can delete your own spots</string>
     <string name="toast_GPS_permission">location permission is necessary to create a spot</string>
     <string name="map_title">Map</string>
     <string name="open_map_button">Open Map</string>
-    <string name="menu_edit_text">edit spot</string>
-    <string name="menu_delete_text">delete spot</string>
+    <string name="signup_Username">Enter a username</string>
+    <string name="noUsernameSet">No username was selected.</string>
 </resources>

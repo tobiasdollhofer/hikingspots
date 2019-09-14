@@ -17,7 +17,6 @@
             android:name=".Map.MapsActivity"
             android:label="@string/map_title"></activity>
 
-        <activity android:name=".Authentication.CreateAccountActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Authentication.LoginActivity">
             <intent-filter>

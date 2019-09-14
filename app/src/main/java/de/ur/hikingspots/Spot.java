@@ -137,4 +137,8 @@ public class Spot implements Parcelable {
     public Uri getPhotoURI(){
         return photoURI;
     }
+
+    public void setPhotoURI(Uri photoURI) {
+        this.photoURI = photoURI;
+    }
 }
