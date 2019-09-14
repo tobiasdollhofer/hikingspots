@@ -85,7 +85,30 @@ public class Spot implements Parcelable {
     }
 
 
+    public void setSpotName(String spotName) {
+        this.spotName = spotName;
+    }
 
+    public void setSpotDescription(String spotDescription) {
+        this.spotDescription = spotDescription;
+    }
+
+    public void setCurrentPhotoPath(String currentPhotoPath) {
+        this.currentPhotoPath = currentPhotoPath;
+    }
+
+    public void setSpotPublic(boolean spotIsPublic) {
+        if (spotIsPublic == true) {
+            spotPublic = Constants.SPOT_IS_PUBLIC;
+        }
+        else {
+            spotPublic = Constants.SPOT_IS_PRIVATE;
+        }
+    }
+
+    public void setPhotoURI(Uri photoURI) {
+        this.photoURI = photoURI;
+    }
 
     public String getSpotName() {
         return spotName;

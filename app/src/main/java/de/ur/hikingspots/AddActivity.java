@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -42,6 +43,8 @@ public class AddActivity extends AppCompatActivity {
     private Switch publicPrivateSwitch;
     private String currentPhotoPath;
     private Uri photoURISpot;
+    private Spot spot;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,16 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.add_activity_layout);
         mAuth = FirebaseAuth.getInstance();
         setupViews();
-        setupOnClickListeners();
+        Intent receivedIntent = getIntent();
+        Bundle bundle = receivedIntent.getExtras();
+        if (bundle != null) {
+            spot = bundle.getParcelable(Constants.KEY_EDIT_SPOT);
+            setupInformation();
+            setupOnClickListenerEdit();
+        }
+        else {
+            setupOnClickListeners();
+        }
     }
 
     @Override
@@ -74,13 +86,17 @@ public class AddActivity extends AppCompatActivity {
         descriptionEditText = findViewById(R.id.edit_text_description);
         imagePreview = findViewById(R.id.image_preview);
         publicPrivateSwitch = findViewById(R.id.public_private_switch);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
+
+    //------------------------code  used for create Spot--------------------------------------------
     private void setupOnClickListeners(){
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDataAndClose();
+                uploadNewSpot();
             }
         });
         photoButton.setOnClickListener(new View.OnClickListener() {
@@ -91,13 +107,20 @@ public class AddActivity extends AppCompatActivity {
         });
     }
 
-    private void getDataAndClose(){
+    private void uploadNewSpot(){
+        spot = getNewSpot();
+        if (spot != null) {
+            //TODO: implement upload
+        }
+    }
+
+    private Spot getNewSpot(){
         String spotName;
         String spotDescription;
-        boolean spotPublic = publicPrivateSwitch.isChecked();
         if (!nameEditText.getText().toString().equals("")){
             spotName = nameEditText.getText().toString().trim();
             Location spotLocation = createLocation();
+            boolean spotPublic = publicPrivateSwitch.isChecked();
             if (!descriptionEditText.getText().toString().equals("")){
                 spotDescription = descriptionEditText.getText().toString().trim();
             }
@@ -105,16 +128,21 @@ public class AddActivity extends AppCompatActivity {
                 spotDescription = null;
             }
             Spot spot = new Spot(this, spotName, spotDescription, currentPhotoPath, spotPublic, mAuth.getCurrentUser(), photoURISpot, spotLocation);
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra( Constants.KEY_RESULT_SPOT, spot);
-                setResult(RESULT_OK, resultIntent);
-                finish();
+            return spot;
         }
         else {
             Toast.makeText(this, getString(R.string.toast_no_name), Toast.LENGTH_SHORT).show();
+            return null;
         }
     }
 
+    //TODO: call method when upload is finished
+    private void setupIntentAndFinishNew(){
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra( Constants.KEY_RESULT_SPOT, spot);
+        setResult(RESULT_OK, resultIntent);
+        finish();
+    }
 
 
 
@@ -194,5 +222,52 @@ public class AddActivity extends AppCompatActivity {
             imagePreview.setImageBitmap(bitmap);
             photoButton.setText(R.string.change_photo_button_text);
         }
+    }
+
+
+    //-------------------------code used to edit spot-----------------------------------------------
+    private void setupInformation(){
+        nameEditText.setText(spot.getSpotName());
+        descriptionEditText.setText(spot.getSpotDescription());
+        imagePreview.setImageURI(spot.getPhotoURI());
+        if (spot.getSpotPublic() == Constants.SPOT_IS_PUBLIC){
+            publicPrivateSwitch.setChecked(true);
+        }
+    }
+
+    private void setupOnClickListenerEdit(){
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadChanges();
+            }
+        });
+        photoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        });
+    }
+
+    private void uploadChanges(){
+        changeData();
+        //TODO: implement spot update with editSpot
+    }
+
+    private void changeData(){
+        spot.setSpotName(nameEditText.getText().toString().trim());
+        spot.setSpotDescription(descriptionEditText.getText().toString().trim());
+        spot.setCurrentPhotoPath(currentPhotoPath);
+        spot.setPhotoURI(photoURISpot);
+        spot.setSpotPublic(publicPrivateSwitch.isChecked());
+    }
+
+    //TODO: call method when update is finished
+    private void setupIntentAndFinishUpdate(){
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(Constants.KEY_RESULT_SPOT, spot);
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 }
