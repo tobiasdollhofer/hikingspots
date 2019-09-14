@@ -28,7 +28,7 @@ import de.ur.hikingspots.Map.MapsActivity;
 public class MainActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogFragmentListener {
 
     private FirebaseAuth mAuth;
-    private Button addButton, openMap;
+    private Button addButton, openMap, logoutButton;
     private ListView listView;
     private ArrayList<Spot> spotList;
     private PersonalAdapter adapter;
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     private void setup(){
         addButton = findViewById(R.id.add_Button);
         openMap = findViewById(R.id.openMap);
+        logoutButton = findViewById(R.id.logout_Button);
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
         adapter = new PersonalAdapter(this, spotList, mAuth.getCurrentUser());
@@ -88,6 +89,13 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                 Intent goToMap = new Intent(MainActivity.this, MapsActivity.class);
                 goToMap.putParcelableArrayListExtra("spot", spotList);
                 startActivity(goToMap);
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
             }
         });
     }
@@ -154,4 +162,10 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         adapter.notifyDataSetChanged();
         //TODO: implement delete function
     }
+
+    private void logout(){
+       mAuth.signOut();
+       updateUI(mAuth.getCurrentUser());
+    }
+
 }

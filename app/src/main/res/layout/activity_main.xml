@@ -23,6 +23,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_Button" />
 
+    <Button
+        android:id="@+id/logout_Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/openMap" />
+
     <ListView
         android:id="@+id/list_view"
         android:layout_width="0dp"
@@ -30,7 +39,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openMap"></ListView>
+        app:layout_constraintTop_toBottomOf="@+id/logout_Button"></ListView>
 
 
 

@@ -1204,6 +1204,7 @@ id loginLogo
 id loginMessage
 id loginPassword
 id logincontainer
+id logout_Button
 id map
 id masked
 id menu_delete_option
@@ -1502,6 +1503,7 @@ string google_crash_reporting_api_key
 string google_maps_key
 string google_storage_bucket
 string hide_bottom_view_on_scroll_behavior
+string logout
 string map_title
 string menu_delete_text
 string menu_edit_text
