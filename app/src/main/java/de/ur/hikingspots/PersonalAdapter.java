@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,7 +52,12 @@ public class PersonalAdapter extends ArrayAdapter<Spot> {
             }
             description.setText(spot.getSpotDescription());
             if (currentUser.getEmail().equals(spot.getOwnerOfSpot().getEmail())){
-                textViewOwnerOfSpot.setText(R.string.personal_adapter_your_spot);
+                if (spot.getSpotPublic() == Constants.SPOT_IS_PUBLIC) {
+                    textViewOwnerOfSpot.setText(R.string.personal_adapter_your_spot_public);
+                }
+                else {
+                    textViewOwnerOfSpot.setText(R.string.personal_adapter_your_spot_private);
+                }
             }
             else {
                 textViewOwnerOfSpot.setText(R.string.personal_adapter_other_spot);
