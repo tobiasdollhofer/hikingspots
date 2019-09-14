@@ -1516,6 +1516,7 @@ string path_password_eye_mask_strike_through
 string path_password_eye_mask_visible
 string path_password_strike_through
 string personal_adapter_other_spot
+string personal_adapter_your_spot
 string personal_adapter_your_spot_private
 string personal_adapter_your_spot_public
 string project_id
