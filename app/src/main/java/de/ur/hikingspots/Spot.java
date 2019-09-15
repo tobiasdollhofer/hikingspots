@@ -27,7 +27,7 @@ public class Spot implements Parcelable {
     private FirebaseUser ownerOfSpot;
     Uri photoURI;
 
-    public Spot(Context context, String spotName, String spotDescription, String currentPhotoPath, boolean spotPublic, FirebaseUser ownerOfSpot, Uri photoURI, Location location){
+    public Spot(String spotName, String spotDescription, String currentPhotoPath, boolean spotPublic, FirebaseUser ownerOfSpot, Uri photoURI, Location location){
         this.context = context;
         this.spotName = spotName;
         this.spotDescription = spotDescription;
@@ -138,4 +138,18 @@ public class Spot implements Parcelable {
         return photoURI;
     }
 
+
+    @Override
+    public String toString() {
+        return "Spot{" +
+                "context=" + context +
+                ", spotName='" + spotName + '\'' +
+                ", spotDescription='" + spotDescription + '\'' +
+                ", spotLocation=" + spotLocation +
+                ", currentPhotoPath='" + currentPhotoPath + '\'' +
+                ", spotPublic=" + spotPublic +
+                ", ownerOfSpot=" + ownerOfSpot +
+                ", photoURI=" + photoURI +
+                '}';
+    }
 }
