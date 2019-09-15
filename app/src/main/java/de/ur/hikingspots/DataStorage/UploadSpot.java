@@ -21,16 +21,15 @@ import java.util.Map;
 
 import de.ur.hikingspots.Spot;
 
-public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
+public class UploadSpot {
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-    StorageReference storageReference = firebaseStorage.getReference();
-    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-    @Override
-    protected Long doInBackground(Spot... spots) {
+
+     public static void uploadSpot(Spot... spots) {
+         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         final Uri file = spots[0].getPhotoURI();
 
         Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -55,12 +54,12 @@ public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
 
            }
        });
-        return null;
     }
 
 
-    private void uploadImage(String documentIdString,Uri file){
-
+    private static void uploadImage(String documentIdString,Uri file){
+         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = firebaseStorage.getReference();
         if(file != null){
             StorageReference reference = storageReference.child("img/" + documentIdString);
             reference.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
