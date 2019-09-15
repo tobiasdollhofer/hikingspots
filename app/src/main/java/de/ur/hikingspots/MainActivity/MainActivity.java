@@ -88,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     private void setup(){
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
-        downloadAllPrivateSpots();
-        downloadAllPublicSpots();
         System.out.println("spotlistSize: " + spotList.size());
         adapter = new PersonalAdapter(this, spotList, mAuth.getCurrentUser());
         listView.setAdapter(adapter);
@@ -286,10 +284,15 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                         spotLocation.setLongitude(Double.parseDouble(documentMap.get("spotLocationLongitude").toString()));
                         spotLocation.setTime((Long) documentMap.get("time"));
 
-                        String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
-
+                        int publicSpotValue = Integer.parseInt(documentMap.get("spotPublic").toString());
+                        boolean publicSpot;
+                        if(publicSpotValue == 0){
+                            publicSpot = false;
+                        }else{
+                            publicSpot = true;
+                        }
                         Uri photoURI = null;
-                        Spot spot = new Spot( spotName, spotDescription, false, currentUser.getUid(), photoURI, spotLocation);
+                        Spot spot = new Spot( spotName, spotDescription, publicSpot, currentUser.getUid(), photoURI, spotLocation);
                         downloadImage(spot, documentSnapshot.getId());
                         downloadedSpots.add(spot);
                     }
@@ -310,8 +313,6 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
 
         db.collection("spots")
                 .whereEqualTo("spotPublic", 1)
-               .whereGreaterThan("UID", currentUser.getUid())
-                .whereLessThan("UID", currentUser.getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -331,7 +332,6 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                             spotLocation.setLongitude(Double.parseDouble(documentMap.get("spotLocationLongitude").toString()));
                             spotLocation.setTime((Long) documentMap.get("time"));
 
-                            String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
                             String userUID = (String) documentMap.get("UID");
                             Uri photoURI = null;
 
