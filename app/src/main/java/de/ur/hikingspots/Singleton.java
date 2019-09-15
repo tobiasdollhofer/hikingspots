@@ -16,14 +16,14 @@ public class Singleton {
 
     private int sync = 0;
 
-    private ArrayList<Spot> largeData;
+    private ArrayList<Spot> passSpotlist;
 
-    public int setLargeData(ArrayList<Spot> largeData) {
-        this.largeData = largeData;
+    public int setSpotList(ArrayList<Spot> largeData) {
+        this.passSpotlist = largeData;
         return ++sync;
     }
 
-    public ArrayList<Spot> getLargeData(int request) {
-        return (request == sync) ? largeData : null;
+    public ArrayList<Spot> getSpotlist(int request) {
+        return (request == sync) ? passSpotlist : null;
     }
 }

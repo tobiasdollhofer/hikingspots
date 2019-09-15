@@ -75,9 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
 
-        int sync = getIntent().getIntExtra("bigdata:synccode", -1);
-        final ArrayList<Spot> spots = Singleton.get().getLargeData(sync);
-        //spots = getIntent().getParcelableArrayListExtra("spot");
+        int sync = getIntent().getIntExtra("spotlist:synccode", -1);
+        final ArrayList<Spot> spots = Singleton.get().getSpotlist(sync);
         spots.size();
         for(Spot spot : spots){
             double lat = spot.getSpotLocation().getLatitude();

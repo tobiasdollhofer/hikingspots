@@ -224,12 +224,9 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     }
 
     private void openMaps(){
-        /*Intent goToMap = new Intent(MainActivity.this, MapsActivity.class);
-        goToMap.putParcelableArrayListExtra("spot", spotList);
-        startActivity(goToMap);*/
         Intent intent = new Intent(this, MapsActivity.class);
-        int sync = Singleton.get().setLargeData(spotList);
-        intent.putExtra("bigdata:synccode", sync);
+        int sync = Singleton.get().setSpotList(spotList);
+        intent.putExtra("spotlist:synccode", sync);
         startActivity(intent);
     }
 
