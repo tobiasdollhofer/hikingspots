@@ -186,6 +186,9 @@ public class AddActivity extends AppCompatActivity {
         if (!nameEditText.getText().toString().equals("")){
             spotName = nameEditText.getText().toString().trim();
             Location spotLocation = createLocation();
+            if (spotLocation == null){
+                return null;
+            }
             boolean spotPublic = publicPrivateSwitch.isChecked();
             if (!descriptionEditText.getText().toString().equals("")){
                 spotDescription = descriptionEditText.getText().toString().trim();
@@ -235,7 +238,7 @@ public class AddActivity extends AppCompatActivity {
             case 1: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    createLocation();
+                    uploadNewSpot();
                 } else {
                     Toast.makeText(this, R.string.toast_GPS_permission, Toast.LENGTH_SHORT).show();
                 }
