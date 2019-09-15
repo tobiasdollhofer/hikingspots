@@ -39,6 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String lat, lgt;
     private LocationManager locationManager;
     private Location lastLocation;
+    private int ms = 100, amplitude = 1;
     private final int PERMISSION_REQUEST_CODE = 1;
     ArrayList<Spot> spots;
 
@@ -80,7 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng marker = new LatLng(lat, lgt);
             mMap.addMarker(new MarkerOptions().position(marker).title(spot.getSpotName()).snippet(spot.getSpotDescription()));
         }
-       // mMap.addMarker(new MarkerOptions().position())
 
         addNewMarker();
 
@@ -95,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent addNewSpot = new Intent(MapsActivity.this, AddActivity.class);
                 startActivity(addNewSpot);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    vib.vibrate(VibrationEffect.createOneShot(100, 1));
+                    vib.vibrate(VibrationEffect.createOneShot(ms, amplitude));
                 }
             }
         });
