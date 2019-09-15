@@ -1,5 +1,6 @@
 package de.ur.hikingspots.MainActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -290,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
 
                         Uri photoURI = null;
                         Spot spot = new Spot( spotName, spotDescription, false, currentUser.getUid(), photoURI, spotLocation);
-                        downloadImage(spot, documentSnapshot.getId());
+                        downloadImage(spot, documentSnapshot.getId(), adapter);
                         downloadedSpots.add(spot);
                     }
                     spotList.addAll(downloadedSpots);
@@ -336,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                             Uri photoURI = null;
 
                             Spot spot = new Spot( spotName, spotDescription,true, userUID, photoURI, spotLocation);
-                            downloadImage(spot, documentSnapshot.getId());
+                            downloadImage(spot, documentSnapshot.getId(), adapter);
                             downloadedSpots.add(spot);
                         }
                     }
@@ -349,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     }
 
 
-    private static void downloadImage(final Spot spot, String documentId){
+    private static void downloadImage(final Spot spot, String documentId, final PersonalAdapter adapter){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference image = storageRef.child("img/"+ documentId);
@@ -360,10 +361,11 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
             @Override
             public void onSuccess(byte[] bytes) {
                 spot.setByteArray(bytes.clone());
+                adapter.notifyDataSetChanged();
             }
         });
-
     }
+
 
     public void deleteSpot(Spot spot) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
