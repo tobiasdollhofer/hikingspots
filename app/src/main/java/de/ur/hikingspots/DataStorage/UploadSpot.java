@@ -21,15 +21,16 @@ import java.util.Map;
 
 import de.ur.hikingspots.Spot;
 
-public class UploadSpot {
+public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    StorageReference storageReference = firebaseStorage.getReference();
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-
-     public static void uploadSpot(Spot... spots) {
-         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    @Override
+    protected Long doInBackground(Spot... spots) {
         final Uri file = spots[0].getPhotoURI();
 
         Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -42,24 +43,24 @@ public class UploadSpot {
         dataMap.put("spotLocationLatitude", spots[0].getSpotLocation().getLatitude());
         dataMap.put("spotLocationAltitude", spots[0].getSpotLocation().getAltitude());
         dataMap.put("time", spots[0].getSpotLocation().getTime());
-       db.collection("spots").add(dataMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-           @Override
-           public void onSuccess(DocumentReference documentReference) {
-               String documentIdString = documentReference.getId();
-               uploadImage(documentIdString, file);
-           }
-       }).addOnFailureListener(new OnFailureListener() {
-           @Override
-           public void onFailure(@NonNull Exception e) {
+        db.collection("spots").add(dataMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                String documentIdString = documentReference.getId();
+                uploadImage(documentIdString, file);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
 
-           }
-       });
+            }
+        });
+        return null;
     }
 
 
-    private static void uploadImage(String documentIdString,Uri file){
-         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = firebaseStorage.getReference();
+    private void uploadImage(String documentIdString,Uri file){
+
         if(file != null){
             StorageReference reference = storageReference.child("img/" + documentIdString);
             reference.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
