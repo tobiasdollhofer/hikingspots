@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/menu_item_logout_add_activity"
-        android:title="logout"/>
+        android:title="@string/action_bar_menu_title_logout"/>
+
+    <item
+        android:id="@+id/menu_item_settings_add_activity"
+        android:title="@string/action_bar_menu_title_settings"/>
 
 
 </menu>

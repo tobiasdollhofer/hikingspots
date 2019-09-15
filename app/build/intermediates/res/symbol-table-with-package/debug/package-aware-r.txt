@@ -1252,7 +1252,6 @@ id action_text
 id actions
 id activity_chooser_view_content
 id add
-id add_photo_button
 id adjust_height
 id adjust_width
 id alertTitle
@@ -1353,6 +1352,7 @@ id menu_item_logout_add_activity
 id menu_item_maps
 id menu_item_new_spot
 id menu_item_settings
+id menu_item_settings_add_activity
 id message
 id middle
 id mini
@@ -1631,15 +1631,16 @@ string abc_searchview_description_voice
 string abc_shareactionprovider_share_with
 string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
+string action_bar_menu_title_create
+string action_bar_menu_title_logout
+string action_bar_menu_title_maps
+string action_bar_menu_title_settings
 string add_activity_switch
 string add_activity_text_view_no_picture
-string add_button_text
-string add_photo_button_text
 string app_name
 string appbar_scrolling_view_behavior
 string authFailed
 string bottom_sheet_behavior
-string change_photo_button_text
 string character_counter_content_description
 string character_counter_pattern
 string common_google_play_services_enable_button
@@ -1669,6 +1670,9 @@ string dialog_fragment_class_exception_text
 string dialog_fragment_message
 string dialog_fragment_negative_button_text
 string dialog_fragment_positive_button_text
+string dialog_key_name
+string dialog_key_position
+string dialog_tag_delete
 string edit_text_description_hint_text
 string edit_text_name_hint_text
 string expand_button_title
@@ -1682,6 +1686,9 @@ string google_crash_reporting_api_key
 string google_maps_key
 string google_storage_bucket
 string hide_bottom_view_on_scroll_behavior
+string key_edit_spot
+string key_result_spot
+string log_key
 string logout
 string map_title
 string menu_change_text_picture
@@ -1714,6 +1721,7 @@ string preference_title_wlan_own
 string project_id
 string requiredField
 string search_menu_title
+string settings_title
 string signup_Username
 string status_bar_notification_info_overflow
 string summary_collapsed_preference_list
