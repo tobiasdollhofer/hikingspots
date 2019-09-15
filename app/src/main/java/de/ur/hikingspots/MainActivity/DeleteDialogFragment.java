@@ -1,4 +1,4 @@
-package de.ur.hikingspots;
+package de.ur.hikingspots.MainActivity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,7 +7,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 
+import de.ur.hikingspots.Constants;
+import de.ur.hikingspots.R;
+
 public class DeleteDialogFragment extends DialogFragment {
+
+    DeleteDialogFragmentListener listener;
 
     public static DeleteDialogFragment newInstance(int spotPosition, String spotName) {
         DeleteDialogFragment frag = new DeleteDialogFragment();
@@ -43,15 +48,13 @@ public class DeleteDialogFragment extends DialogFragment {
         public void onDialogPositiveClick(int position);
     }
 
-    DeleteDialogFragmentListener listener;
-
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
         try {
             listener = (DeleteDialogFragmentListener) context;
         } catch (ClassCastException e){
-            throw new ClassCastException(context.toString() + "must implement DeleteDialogFragmentListener");
+            throw new ClassCastException(context.toString() + getString(R.string.dialog_fragment_class_exception_text));
         }
     }
 }

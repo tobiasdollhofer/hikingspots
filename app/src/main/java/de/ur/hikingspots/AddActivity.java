@@ -15,12 +15,18 @@ import android.provider.MediaStore;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +39,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import de.ur.hikingspots.Authentication.LoginActivity;
+import de.ur.hikingspots.Map.MapsActivity;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -45,6 +52,7 @@ public class AddActivity extends AppCompatActivity {
     private Uri photoURISpot;
     private Spot spot;
     private ProgressBar progressBar;
+    private TextView createPictureTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +96,60 @@ public class AddActivity extends AppCompatActivity {
         publicPrivateSwitch = findViewById(R.id.public_private_switch);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+        createPictureTextView = findViewById(R.id.textViewNoPicture);
+        registerForContextMenu(imagePreview);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.floating_menu_image_preview, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_edit_option:
+                takePicture();
+                return true;
+            case R.id.menu_delete_option:
+                imagePreview.setImageBitmap(null);
+                photoURISpot = null;
+                currentPhotoPath = null;
+                createPictureTextView.setVisibility(View.VISIBLE);
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar_menu_add_activity, menu);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+            case R.id.menu_item_logout_add_activity:
+                logout();
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void logout(){
+        mAuth.signOut();
+        updateUI(mAuth.getCurrentUser());
+    }
     //------------------------code  used for create Spot--------------------------------------------
     private void setupOnClickListeners(){
         createButton.setOnClickListener(new View.OnClickListener() {
@@ -105,12 +164,19 @@ public class AddActivity extends AppCompatActivity {
                 takePicture();
             }
         });
+        createPictureTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        });
     }
 
     private void uploadNewSpot(){
         spot = getNewSpot();
         if (spot != null) {
             //TODO: implement upload
+            setupIntentAndFinishNew();
         }
     }
 
@@ -123,11 +189,12 @@ public class AddActivity extends AppCompatActivity {
             boolean spotPublic = publicPrivateSwitch.isChecked();
             if (!descriptionEditText.getText().toString().equals("")){
                 spotDescription = descriptionEditText.getText().toString().trim();
+                String asdf = mAuth.getCurrentUser().getUid();
             }
             else {
                 spotDescription = null;
             }
-            Spot spot = new Spot(this, spotName, spotDescription, currentPhotoPath, spotPublic, mAuth.getCurrentUser(), photoURISpot, spotLocation);
+            Spot spot = new Spot(spotName, spotDescription, currentPhotoPath, spotPublic, mAuth.getCurrentUser().getUid(), photoURISpot, spotLocation);
             return spot;
         }
         else {
@@ -221,6 +288,7 @@ public class AddActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
             imagePreview.setImageBitmap(bitmap);
             photoButton.setText(R.string.change_photo_button_text);
+            createPictureTextView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -253,6 +321,7 @@ public class AddActivity extends AppCompatActivity {
     private void uploadChanges(){
         changeData();
         //TODO: implement spot update with editSpot
+        setupIntentAndFinishUpdate();
     }
 
     private void changeData(){

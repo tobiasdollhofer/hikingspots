@@ -17,7 +17,8 @@
             android:name=".Map.MapsActivity"
             android:label="@string/map_title"></activity>
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity.MainActivity"
+            android:theme="@style/AppThemeWithActionBar"/>
         <activity android:name=".Authentication.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddActivity" />
+        <activity android:name=".AddActivity"
+            android:theme="@style/AppThemeWithActionBar"/>
+        <activity android:name=".Settings.SettingsActivity"
+            android:theme="@style/AppThemeWithActionBar"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -49,5 +53,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 </manifest>

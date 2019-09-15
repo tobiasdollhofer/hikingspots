@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <SwitchPreference
+        app:key= "@string/preference_key_wlan_own"
+        app:title="@string/preference_title_wlan_own"
+        app:defaultValue="true"/>
+
+    <SwitchPreference
+        app:key="@string/preference_key_download_external"
+        app:title="@string/preference_title_wlan_external"
+        app:defaultValue="true"/>
+
+
+    <CheckBoxPreference
+        app:key="@string/preference_key_download_external"
+        app:title="@string/preference_title_download_external"
+        app:defaultValue="true"/>
+
+
+    <CheckBoxPreference
+        app:key="@string/preference_key_download_own"
+        app:title="@string/preference_title_download_own"
+        app:defaultValue="true"/>
+
+</PreferenceScreen>

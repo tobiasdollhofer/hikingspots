@@ -8,7 +8,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,11 +25,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.ur.hikingspots.AddActivity;
 import de.ur.hikingspots.Authentication.LoginActivity;
-import de.ur.hikingspots.MainActivity;
 import de.ur.hikingspots.R;
 import de.ur.hikingspots.Spot;
 
