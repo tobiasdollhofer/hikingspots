@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -106,19 +107,12 @@ public class SignupFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Map<String, String> userMap = new HashMap<String, String>();
-                            userMap.put("name", signupUsername.getText().toString());
-                            userMap.put("uid", user.getUid());
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(signupUsername.getText().toString()).build();
 
-                            firebaseFirestore.collection("user").document(user.getUid()).set(userMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void mVoid) {
-
-
-                                }
-                            });
+                            user.updateProfile(profileUpdates);
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
