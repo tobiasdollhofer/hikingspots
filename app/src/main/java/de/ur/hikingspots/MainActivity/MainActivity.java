@@ -311,6 +311,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                         downloadedSpots.add(spot);
                     }
                     spotList.addAll(downloadedSpots);
+                    adapter.notifyDataSetChanged();
                     System.out.println("Size of spotList: " + spotList.size());
                 }
 
@@ -357,6 +358,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                     }
                     spotList.addAll(downloadedSpots);
                     System.out.println("Size of spotList: " + spotList.size());
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -373,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         image.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                spot.setByteArray(bytes);
+                spot.setByteArray(bytes.clone());
             }
         });
 
