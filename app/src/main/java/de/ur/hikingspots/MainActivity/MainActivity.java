@@ -327,8 +327,8 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
 
         db.collection("spots")
                 .whereEqualTo("spotPublic", 1)
-                .whereGreaterThan("UID", currentUser.getUid())
-                .whereLessThan("UID", currentUser.getUid())
+            /*    .whereGreaterThan("UID", currentUser.getUid())
+                .whereLessThan("UID", currentUser.getUid())*/
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -338,23 +338,24 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                     QuerySnapshot querySnapshot = task.getResult();
                     for(DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()){
                         Map<String, Object> documentMap = documentSnapshot.getData();
+                        if(!((String) documentMap.get("UID")).equals(currentUser.getUid())){
+                            String spotName = (String) documentMap.get("spotName");
+                            String spotDescription = (String) documentMap.get("spotDescription");
 
-                        String spotName = (String) documentMap.get("spotName");
-                        String spotDescription = (String) documentMap.get("spotDescription");
+                            Location spotLocation = new Location("");
+                            spotLocation.setAltitude(Double.parseDouble(documentMap.get("spotLocationAltitude").toString()));
+                            spotLocation.setLatitude(Double.parseDouble(documentMap.get("spotLocationLatitude").toString()));
+                            spotLocation.setLongitude(Double.parseDouble(documentMap.get("spotLocationLongitude").toString()));
+                            spotLocation.setTime((Long) documentMap.get("time"));
 
-                        Location spotLocation = new Location("");
-                        spotLocation.setAltitude(Double.parseDouble(documentMap.get("spotLocationAltitude").toString()));
-                        spotLocation.setLatitude(Double.parseDouble(documentMap.get("spotLocationLatitude").toString()));
-                        spotLocation.setLongitude(Double.parseDouble(documentMap.get("spotLocationLongitude").toString()));
-                        spotLocation.setTime((Long) documentMap.get("time"));
+                            String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
+                            String userUID = (String) documentMap.get("UID");
+                            Uri photoURI = null;
 
-                        String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
-                        String userUID = (String) documentMap.get("UID");
-                        Uri photoURI = null;
-
-                        Spot spot = new Spot( spotName, spotDescription,true, userUID, photoURI, spotLocation);
-                        downloadImage(spot, documentSnapshot.getId());
-                        downloadedSpots.add(spot);
+                            Spot spot = new Spot( spotName, spotDescription,true, userUID, photoURI, spotLocation);
+                            downloadImage(spot, documentSnapshot.getId());
+                            downloadedSpots.add(spot);
+                        }
                     }
                     spotList.addAll(downloadedSpots);
                     System.out.println("Size of spotList: " + spotList.size());
