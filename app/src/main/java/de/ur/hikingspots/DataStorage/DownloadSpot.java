@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,26 +48,17 @@ public class DownloadSpot {
                         String spotDescription = (String) documentMap.get("spotDescription");
 
 
-
-                        Map<String, Object> locationMap = (Map) documentMap.get("spotLocation");
-                        Location spotLocation = new Location((String) locationMap.get("provider"));
-                        spotLocation.setAccuracy(Float.parseFloat(locationMap.get("accuracy").toString()));
-                        spotLocation.setAltitude((Double) locationMap.get("altitude"));
-                        spotLocation.setBearing(Float.parseFloat(locationMap.get("bearing").toString()));
-                        spotLocation.setBearingAccuracyDegrees(Float.parseFloat(locationMap.get("bearingAccuracyDegrees").toString()));
-                        spotLocation.setElapsedRealtimeNanos((Long) locationMap.get("elapsedRealtimeNanos"));
-                        spotLocation.setLatitude((Double) locationMap.get("latitude"));
-                        spotLocation.setLongitude((Double) locationMap.get("longitude"));
-                        spotLocation.setSpeed(Float.parseFloat(locationMap.get("speed").toString()));
-                        spotLocation.setSpeedAccuracyMetersPerSecond(Float.parseFloat(locationMap.get("speedAccuracyMetersPerSecond").toString()));
-                        spotLocation.setTime((Long) locationMap.get("time"));
-                        spotLocation.setVerticalAccuracyMeters(Float.parseFloat(locationMap.get("verticalAccuracyMeters").toString()));
+                        Location spotLocation = new Location("");
+                        spotLocation.setAltitude((Double) documentMap.get("spotLocationAltitude"));
+                        spotLocation.setLatitude((Double) documentMap.get("spotLocationLatitude"));
+                        spotLocation.setLongitude((Double) documentMap.get("spotLocatonLongitude"));
+                        spotLocation.setTime((Long) documentMap.get("time"));
 
                         String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
-                        FirebaseUser ownerOfSpot = currentUser;
-                        Uri photoURI = null;
-                        Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, false, ownerOfSpot, photoURI, spotLocation);
 
+                        Uri photoURI = null;
+                        final Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, false, currentUser.getUid(), photoURI, spotLocation);
+                        downloadImage(spot);
                         spots.add(spot);
                         System.out.println(spot.toString());
                     }
@@ -98,28 +91,18 @@ public class DownloadSpot {
                         String spotName = (String) documentMap.get("spotName");
                         String spotDescription = (String) documentMap.get("spotDescription");
 
-
-
-                        Map<String, Object> locationMap = (Map) documentMap.get("spotLocation");
-                        Location spotLocation = new Location((String) locationMap.get("provider"));
-                        spotLocation.setAccuracy(Float.parseFloat(locationMap.get("accuracy").toString()));
-                        spotLocation.setAltitude((Double) locationMap.get("altitude"));
-                        spotLocation.setBearing(Float.parseFloat(locationMap.get("bearing").toString()));
-                        spotLocation.setBearingAccuracyDegrees(Float.parseFloat(locationMap.get("bearingAccuracyDegrees").toString()));
-                        spotLocation.setElapsedRealtimeNanos((Long) locationMap.get("elapsedRealtimeNanos"));
-                        spotLocation.setLatitude((Double) locationMap.get("latitude"));
-                        spotLocation.setLongitude((Double) locationMap.get("longitude"));
-                        spotLocation.setSpeed(Float.parseFloat(locationMap.get("speed").toString()));
-                        spotLocation.setSpeedAccuracyMetersPerSecond(Float.parseFloat(locationMap.get("speedAccuracyMetersPerSecond").toString()));
-                        spotLocation.setTime((Long) locationMap.get("time"));
-                        spotLocation.setVerticalAccuracyMeters(Float.parseFloat(locationMap.get("verticalAccuracyMeters").toString()));
+                        Location spotLocation = new Location("");
+                        spotLocation.setAltitude((Double) documentMap.get("spotLocationAltitude"));
+                        spotLocation.setLatitude((Double) documentMap.get("spotLocationLatitude"));
+                        spotLocation.setLongitude((Double) documentMap.get("spotLocatonLongitude"));
+                        spotLocation.setTime((Long) documentMap.get("time"));
 
                         String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
-                        FirebaseUser ownerOfSpot = null;
+                        String userUID = (String) documentMap.get("UID");
                         Uri photoURI = null;
 
-                        Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, false, ownerOfSpot, photoURI, spotLocation);
-
+                        final Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, true, userUID, photoURI, spotLocation);
+                        downloadImage(spot);
                         spots.add(spot);
                         System.out.println(spot.toString());
                     }
@@ -129,5 +112,25 @@ public class DownloadSpot {
         return spots;
     }
 
+
+    private static void downloadImage(final Spot spot){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference image = storageRef.child("img/"+spot.getFirebaseUID());
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        image.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                spot.setByteArray(bytes);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
+    }
 
 }

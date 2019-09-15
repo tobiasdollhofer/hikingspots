@@ -1,11 +1,9 @@
 package de.ur.hikingspots.DataStorage;
 
-import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,7 +19,6 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.ur.hikingspots.AddActivity;
 import de.ur.hikingspots.Spot;
 
 public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
@@ -37,21 +34,21 @@ public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
         final Uri file = spots[0].getPhotoURI();
         spots[0].setPhotoURI(null);
 
-        final String currentUserId = currentUser.getUid();
         Map<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("UID", currentUser.getUid());
         dataMap.put("currentPhotoPath", spots[0].getCurrentPhotoPath());
         dataMap.put("spotName", spots[0].getSpotName());
         dataMap.put("spotDescription", spots[0].getSpotDescription());
         dataMap.put("spotPublic", spots[0].getSpotPublic());
-        dataMap.put("spotLocation", spots[0].getSpotLocation());
-
+        dataMap.put("spotLocationLongitude", spots[0].getSpotLocation().getLongitude());
+        dataMap.put("spotLocationLatitude", spots[0].getSpotLocation().getLatitude());
+        dataMap.put("spotLocationAltitude", spots[0].getSpotLocation().getAltitude());
+        dataMap.put("time", spots[0].getSpotLocation().getTime());
        db.collection("spots").add(dataMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
            @Override
            public void onSuccess(DocumentReference documentReference) {
                String documentIdString = documentReference.getId();
                uploadImage(documentIdString, file);
-
            }
        }).addOnFailureListener(new OnFailureListener() {
            @Override
@@ -63,7 +60,7 @@ public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
     }
 
 
-    private void uploadImage(String documentIdString, Uri file){
+    private void uploadImage(String documentIdString,Uri file){
 
         if(file != null){
             StorageReference reference = storageReference.child("img/" + documentIdString);
