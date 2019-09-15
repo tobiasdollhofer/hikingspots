@@ -25,12 +25,6 @@ import de.ur.hikingspots.Spot;
 
 public class DownloadSpot {
 
-    private FirebaseStorage firebaseStorage;
-    private FirebaseFirestore db;
-    private StorageReference storageReference;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser currentUser;
-
     public static ArrayList<Spot> downloadAllPrivateSpots(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -38,7 +32,7 @@ public class DownloadSpot {
         final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         final ArrayList<Spot> spots = new ArrayList<Spot>();
         db.collection("spots")
-                .whereEqualTo("ownerOfSpot.email", currentUser.getEmail())
+                .whereEqualTo("UID", currentUser.getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -84,14 +78,14 @@ public class DownloadSpot {
 
     public static ArrayList<Spot> downloadAllPublicSpots(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
         final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         final ArrayList<Spot> spots = new ArrayList<Spot>();
         db.collection("spots")
                 .whereEqualTo("spotPublic", 0)
-                .whereGreaterThan("ownerOfSpot.email", currentUser.getEmail())
-                .whereLessThan("ownerOfSpot.email", currentUser.getEmail())
+                .whereGreaterThan("UID", currentUser.getUid())
+                .whereLessThan("UID", currentUser.getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -121,7 +115,7 @@ public class DownloadSpot {
                         spotLocation.setVerticalAccuracyMeters(Float.parseFloat(locationMap.get("verticalAccuracyMeters").toString()));
 
                         String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
-                        FirebaseUser ownerOfSpot = currentUser;
+                        FirebaseUser ownerOfSpot = null;
                         Uri photoURI = null;
                         Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, false, ownerOfSpot, photoURI, spotLocation);
 

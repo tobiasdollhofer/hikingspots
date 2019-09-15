@@ -37,7 +37,16 @@ public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
         final Uri file = spots[0].getPhotoURI();
         spots[0].setPhotoURI(null);
 
-       db.collection("spots").add(spots[0]).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        final String currentUserId = currentUser.getUid();
+        Map<String, Object> dataMap = new HashMap<String, Object>();
+        dataMap.put("UID", currentUser.getUid());
+        dataMap.put("currentPhotoPath", spots[0].getCurrentPhotoPath());
+        dataMap.put("spotName", spots[0].getSpotName());
+        dataMap.put("spotDescription", spots[0].getSpotDescription());
+        dataMap.put("spotPublic", spots[0].getSpotPublic());
+        dataMap.put("spotLocation", spots[0].getSpotLocation());
+
+       db.collection("spots").add(dataMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
            @Override
            public void onSuccess(DocumentReference documentReference) {
                String documentIdString = documentReference.getId();
