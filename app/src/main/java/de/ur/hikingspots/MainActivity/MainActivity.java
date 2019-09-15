@@ -51,7 +51,6 @@ import de.ur.hikingspots.Spot;
 public class MainActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogFragmentListener {
 
     private FirebaseAuth mAuth;
-    //private Button addButton, openMap, logoutButton;
     private ListView listView;
     private ArrayList<Spot> spotList;
     private PersonalAdapter adapter;
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
         setup();
-        checkPreferences();
+        checkPreferencesAndDownload();
         //setupClickListener();
     }
 
@@ -87,9 +86,6 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     }
 
     private void setup(){
-        /*addButton = findViewById(R.id.add_Button);
-        openMap = findViewById(R.id.openMap);
-        logoutButton = findViewById(R.id.logout_Button);*/
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
         downloadAllPrivateSpots();
@@ -100,64 +96,43 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         registerForContextMenu(listView);
     }
 
-    /*private void setupClickListener(){
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openAddActivityForNewSpot();
-            }
-        });
-
-
-        openMap.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                openMaps();
-            }
-        });
-
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                logout();
-            }
-        });
-    }*/
-
-    private void checkPreferences(){
+    private void checkPreferencesAndDownload(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         ConnectivityManager connectionManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mobile = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         NetworkInfo wifi = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        //download own spots only in wifi
-        if (sharedPreferences.getBoolean(getString(R.string.preference_key_wlan_own), Constants.PREFERENCE_DEFAULT_WLAN_OWN) && wifi.isConnected()){
-            if (sharedPreferences.getBoolean(getString(R.string.preference_key_download_own), Constants.PREFERENCE_DEFAULT_DOWNLOAD_OWN)){
-                downloadOwnSpots();
+        //check for internet connection
+        if (wifi.isConnected() || mobile.isConnected()) {
+            //
+            //download your own spots always
+            if (!sharedPreferences.getBoolean(getString(R.string.preference_key_wlan_own), Constants.PREFERENCE_DEFAULT_WLAN_OWN)) {
+                if (sharedPreferences.getBoolean(getString(R.string.preference_key_download_own), Constants.PREFERENCE_DEFAULT_DOWNLOAD_OWN)) {
+                    downloadAllPrivateSpots();
+                }
             }
-        }
-        if (sharedPreferences.getBoolean(getString(R.string.preference_key_wlan_external), Constants.PREFERENCE_DEFAULT_WLAN_EXTERNAL) && wifi.isConnected()){
-            if (sharedPreferences.getBoolean(getString(R.string.preference_key_download_external), Constants.PREFERENCE_DEFAULT_DOWNLOAD_EXTERNAL)){
-                dowloadExternalSpots();
+            //download own spots only in wifi
+            else if (sharedPreferences.getBoolean(getString(R.string.preference_key_wlan_own), Constants.PREFERENCE_DEFAULT_WLAN_OWN) && wifi.isConnected()) {
+                if (sharedPreferences.getBoolean(getString(R.string.preference_key_download_own), Constants.PREFERENCE_DEFAULT_DOWNLOAD_OWN)) {
+                    downloadAllPrivateSpots();
+                }
             }
-        }
-        if (!sharedPreferences.getBoolean(getString(R.string.preference_key_wlan_own), Constants.PREFERENCE_DEFAULT_WLAN_OWN)){
-            if (sharedPreferences.getBoolean(getString(R.string.preference_key_download_own), Constants.PREFERENCE_DEFAULT_DOWNLOAD_OWN)){
-                downloadOwnSpots();
-            }
-        }
-        if (!sharedPreferences.getBoolean(getString(R.string.preference_key_wlan_external), Constants.PREFERENCE_DEFAULT_WLAN_EXTERNAL) && wifi.isConnected()){
-            if (sharedPreferences.getBoolean(getString(R.string.preference_key_download_external), Constants.PREFERENCE_DEFAULT_DOWNLOAD_EXTERNAL)){
-                dowloadExternalSpots();
-            }
-        }
-    }
 
-    private void downloadOwnSpots(){
-
-        //TODO: download own spots
-    }
-
-    private void dowloadExternalSpots(){
-        //TODO: download spot form other users
+            //download spots form others always
+            if (!sharedPreferences.getBoolean(getString(R.string.preference_key_wlan_external), Constants.PREFERENCE_DEFAULT_WLAN_EXTERNAL)) {
+                if (sharedPreferences.getBoolean(getString(R.string.preference_key_download_external), Constants.PREFERENCE_DEFAULT_DOWNLOAD_EXTERNAL)) {
+                    downloadAllPublicSpots();
+                }
+            }
+            //download spots from others only with wifi
+            else if (sharedPreferences.getBoolean(getString(R.string.preference_key_wlan_external), Constants.PREFERENCE_DEFAULT_WLAN_EXTERNAL) && wifi.isConnected()) {
+                if (sharedPreferences.getBoolean(getString(R.string.preference_key_download_external), Constants.PREFERENCE_DEFAULT_DOWNLOAD_EXTERNAL)) {
+                    downloadAllPublicSpots();
+                }
+            }
+        }
+        else {
+            Toast.makeText(this, R.string.internet_connection_no, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -194,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         }
     }
 
+    //delete spot
     @Override
     public void onDialogPositiveClick(int position){
         Spot spot = spotList.get(position);
@@ -201,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         adapter.notifyDataSetChanged();
         deleteSpot(spot);
         adapter.notifyDataSetChanged();
-        //TODO: implement delete function
     }
 
     @Override
@@ -223,6 +198,10 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
 
             case R.id.menu_item_logout:
                 logout();
+                return true;
+
+            case R.id.menu_item_download:
+                checkPreferencesAndDownload();
                 return true;
 
             case R.id.menu_item_settings:
@@ -252,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
 
     private void openAddActivityToEdit(int positionOfSpot){
         if (mAuth.getCurrentUser().getUid().equals(spotList.get(positionOfSpot).getFirebaseUID())) {
+            deleteSpot(spotList.get(positionOfSpot));
             Intent goToAddActivityEditSpot = new Intent(MainActivity.this, AddActivity.class);
             goToAddActivityEditSpot.putExtra(getString(R.string.key_edit_spot), spotList.get(positionOfSpot));
             spotList.remove(positionOfSpot);
@@ -273,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
             Bundle extras = data.getExtras();
             Spot newSpot = (Spot) extras.getParcelable(getString(R.string.key_result_spot));
             spotList.add(newSpot);
-            //new UploadSpot().execute(newSpot);
             adapter.notifyDataSetChanged();
         }
     }
@@ -331,8 +310,8 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
 
         db.collection("spots")
                 .whereEqualTo("spotPublic", 1)
-            /*    .whereGreaterThan("UID", currentUser.getUid())
-                .whereLessThan("UID", currentUser.getUid())*/
+               .whereGreaterThan("UID", currentUser.getUid())
+                .whereLessThan("UID", currentUser.getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
