@@ -49,16 +49,16 @@ public class DownloadSpot {
 
 
                         Location spotLocation = new Location("");
-                        spotLocation.setAltitude((Double) documentMap.get("spotLocationAltitude"));
-                        spotLocation.setLatitude((Double) documentMap.get("spotLocationLatitude"));
-                        spotLocation.setLongitude((Double) documentMap.get("spotLocatonLongitude"));
+                        spotLocation.setAltitude(Double.parseDouble(documentMap.get("spotLocationAltitude").toString()));
+                        spotLocation.setLatitude(Double.parseDouble(documentMap.get("spotLocationLatitude").toString()));
+                        spotLocation.setLongitude(Double.parseDouble(documentMap.get("spotLocationLongitude").toString()));
                         spotLocation.setTime((Long) documentMap.get("time"));
 
                         String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
 
                         Uri photoURI = null;
                         final Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, false, currentUser.getUid(), photoURI, spotLocation);
-                        downloadImage(spot);
+                        downloadImage(spot, documentSnapshot.getId());
                         spots.add(spot);
                         System.out.println(spot.toString());
                     }
@@ -92,9 +92,9 @@ public class DownloadSpot {
                         String spotDescription = (String) documentMap.get("spotDescription");
 
                         Location spotLocation = new Location("");
-                        spotLocation.setAltitude((Double) documentMap.get("spotLocationAltitude"));
-                        spotLocation.setLatitude((Double) documentMap.get("spotLocationLatitude"));
-                        spotLocation.setLongitude((Double) documentMap.get("spotLocatonLongitude"));
+                        spotLocation.setAltitude(Double.parseDouble(documentMap.get("spotLocationAltitude").toString()));
+                        spotLocation.setLatitude(Double.parseDouble(documentMap.get("spotLocationLatitude").toString()));
+                        spotLocation.setLongitude(Double.parseDouble(documentMap.get("spotLocationLongitude").toString()));
                         spotLocation.setTime((Long) documentMap.get("time"));
 
                         String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
@@ -102,7 +102,7 @@ public class DownloadSpot {
                         Uri photoURI = null;
 
                         final Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, true, userUID, photoURI, spotLocation);
-                        downloadImage(spot);
+                        downloadImage(spot, documentSnapshot.getId());
                         spots.add(spot);
                         System.out.println(spot.toString());
                     }
@@ -113,21 +113,17 @@ public class DownloadSpot {
     }
 
 
-    private static void downloadImage(final Spot spot){
+    private static void downloadImage(final Spot spot, String documentId){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference image = storageRef.child("img/"+spot.getFirebaseUID());
+        StorageReference image = storageRef.child("img/"+ documentId);
+        System.out.println("documentid:" + documentId);
 
         final long ONE_MEGABYTE = 1024 * 1024;
         image.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 spot.setByteArray(bytes);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
             }
         });
 

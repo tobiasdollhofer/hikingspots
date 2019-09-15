@@ -32,7 +32,6 @@ public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
     @Override
     protected Long doInBackground(Spot... spots) {
         final Uri file = spots[0].getPhotoURI();
-        spots[0].setPhotoURI(null);
 
         Map<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("UID", currentUser.getUid());
