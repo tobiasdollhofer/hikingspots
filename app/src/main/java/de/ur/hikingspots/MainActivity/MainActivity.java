@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -195,7 +196,10 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
 
     @Override
     public void onDialogPositiveClick(int position){
+        Spot spot = spotList.get(position);
         spotList.remove(position);
+        adapter.notifyDataSetChanged();
+        deleteSpot(spot);
         adapter.notifyDataSetChanged();
         //TODO: implement delete function
     }
@@ -379,6 +383,36 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                 spot.setByteArray(bytes.clone());
             }
         });
+
+    }
+
+    public void deleteSpot(Spot spot) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        db.collection("spots")
+                .whereEqualTo("time", spot.getSpotLocation().getTime())
+                .whereEqualTo("UID", currentUser.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        FirebaseFirestore deleteDb = FirebaseFirestore.getInstance();
+                        deleteDb.collection("spots")
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getId())
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+                    }
+                });
 
     }
 }
