@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import de.ur.hikingspots.Authentication.LoginActivity;
+import de.ur.hikingspots.DataStorage.UploadSpot;
 import de.ur.hikingspots.MainActivity.MainActivity;
 import de.ur.hikingspots.Map.MapsActivity;
 import de.ur.hikingspots.Settings.SettingsActivity;
@@ -94,13 +95,10 @@ public class AddActivity extends AppCompatActivity {
 
     private void setupViews(){
         createButton = findViewById(R.id.create_button);
-        //photoButton = findViewById(R.id.add_photo_button);
         nameEditText = findViewById(R.id.edit_text_name);
         descriptionEditText = findViewById(R.id.edit_text_description);
         imagePreview = findViewById(R.id.image_preview);
         publicPrivateSwitch = findViewById(R.id.public_private_switch);
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
         createPictureTextView = findViewById(R.id.textViewNoPicture);
         registerForContextMenu(imagePreview);
     }
@@ -172,12 +170,6 @@ public class AddActivity extends AppCompatActivity {
                 uploadNewSpot();
             }
         });
-        /*photoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });*/
         createPictureTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,8 +180,8 @@ public class AddActivity extends AppCompatActivity {
 
     private void uploadNewSpot(){
         spot = getNewSpot();
+        spot.setByteArray(photoByte);
         if (spot != null) {
-            //TODO: implement upload
             setupIntentAndFinish();
         }
     }
@@ -210,7 +202,7 @@ public class AddActivity extends AppCompatActivity {
             else {
                 spotDescription = null;
             }
-            Spot spot = new Spot(spotName, spotDescription, spotPublic, mAuth.getCurrentUser().getUid(), photoURISpot, spotLocation/*, photoByte*/);
+            Spot spot = new Spot(spotName, spotDescription, spotPublic, mAuth.getCurrentUser().getUid(), photoURISpot, spotLocation);
             return spot;
         }
         else {
@@ -218,16 +210,6 @@ public class AddActivity extends AppCompatActivity {
             return null;
         }
     }
-
-    //TODO: call method when upload is finished
-    /*private void setupIntentAndFinishNew(){
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(getString(R.string.key_result_spot), spot);
-        setResult(RESULT_OK, resultIntent);
-        finish();
-    }*/
-
-
 
     private Location createLocation(){
         if (checkLocationPermission()){
@@ -292,17 +274,10 @@ public class AddActivity extends AppCompatActivity {
                 uploadChanges();
             }
         });
-        /*photoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });*/
         createPictureTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
-                //spot.setByteArray(new byte[0]);
             }
         });
     }
@@ -325,6 +300,7 @@ public class AddActivity extends AppCompatActivity {
 
     //TODO: call method when update is finished
     private void setupIntentAndFinish(){
+        new UploadSpot().execute(spot);
         Intent resultIntent = new Intent();
         resultIntent.putExtra(getString(R.string.key_result_spot), spot);
         setResult(RESULT_OK, resultIntent);
@@ -366,8 +342,6 @@ public class AddActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if ((requestCode == Constants.REQUEST_CODE_FOR_PHOTO) && (resultCode == RESULT_OK)){
             Bitmap receivedBitmap = BitmapFactory.decodeFile(currentPhotoPath);
-            //imagePreview.setImageBitmap(bitmap);
-            //photoButton.setText(R.string.change_photo_button_text);
             createPictureTextView.setVisibility(View.INVISIBLE);
             byte[] byteArray = getBytesFromBitmap(receivedBitmap);
             Bitmap showBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);

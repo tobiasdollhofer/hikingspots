@@ -1168,6 +1168,7 @@ drawable googleg_disabled_color_18
 drawable googleg_standard_color_18
 drawable ic_arrow_down_24dp
 drawable ic_back
+drawable ic_file_download_black_24dp
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable ic_mtrl_chip_checked_black
@@ -1347,6 +1348,7 @@ id map
 id masked
 id menu_delete_option
 id menu_edit_option
+id menu_item_download
 id menu_item_logout
 id menu_item_logout_add_activity
 id menu_item_maps
@@ -1376,7 +1378,6 @@ id parentPanel
 id parent_matrix
 id percent
 id pin
-id progressBar
 id progress_circular
 id progress_horizontal
 id public_private_switch
@@ -1673,6 +1674,7 @@ string dialog_fragment_positive_button_text
 string dialog_key_name
 string dialog_key_position
 string dialog_tag_delete
+string download_button
 string edit_text_description_hint_text
 string edit_text_name_hint_text
 string expand_button_title
@@ -1686,6 +1688,8 @@ string google_crash_reporting_api_key
 string google_maps_key
 string google_storage_bucket
 string hide_bottom_view_on_scroll_behavior
+string internet_connection_no
+string internet_connection_settings
 string key_edit_spot
 string key_result_spot
 string log_key

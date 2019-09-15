@@ -19,7 +19,7 @@ public class Spot implements Parcelable {
     private Uri photoURI;
     private byte[] byteArray;
 
-    public Spot(String spotName, String spotDescription, boolean spotPublic, String firebaseUID, Uri photoURI, Location location/*, byte[] byteArray*/){
+    public Spot(String spotName, String spotDescription, boolean spotPublic, String firebaseUID, Uri photoURI, Location location){
         this.spotName = spotName;
         this.spotDescription = spotDescription;
         if (spotPublic == true){
