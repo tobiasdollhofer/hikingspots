@@ -35,7 +35,8 @@
 
         <activity android:name=".Settings.SettingsActivity"
             android:theme="@style/AppThemeWithActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:label="@string/settings_title"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

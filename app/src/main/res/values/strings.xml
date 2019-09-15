@@ -11,34 +11,35 @@
     <string name="authFailed">Authentication failed.</string>
     <string name="passwordNotIdentical">Password isn\'t identical.</string>
     <string name="passwordTooShort">Password is too short.</string>
-    <string name="add_button_text">add</string>
-    <string name="create_button_text">Save Spot</string>
-    <string name="edit_text_name_hint_text">Name of location</string>
-    <string name="edit_text_description_hint_text">Description for the location</string>
-    <string name="add_photo_button_text">add new photo</string>
-    <string name="change_photo_button_text">change picture</string>
-    <string name="dialog_fragment_message">Do you want to delete</string>
-    <string name="dialog_fragment_positive_button_text">Delete</string>
-    <string name="dialog_fragment_negative_button_text">Cancel</string>
-    <string name="dialog_fragment_class_exception_text">must implement DeleteDialogFragmentListener</string>
-    <string name="add_activity_switch">make your spot public</string>
-    <string name="add_activity_text_view_no_picture">Your Spot has no picture yet. Create one.</string>
-    <string name="personal_adapter_your_spot_public">public</string>
-    <string name="personal_adapter_your_spot_private">private</string>
-    <string name="personal_adapter_other_spot">this is a spot from another person</string>
-    <string name="toast_no_name">spots must have a name</string>
-    <string name="toast_not_your_spot_delete">your only can delete your own spots</string>
-    <string name="toast_not_your_spot_edit">your only can edit your own spots</string>
-    <string name="toast_GPS_permission">location permission is necessary to create a spot</string>
     <string name="map_title">Map</string>
     <string name="open_map_button">Open Map</string>
     <string name="signup_Username">Enter a username</string>
     <string name="noUsernameSet">No username was selected.</string>
-    <string name="menu_edit_text_spot">edit spot</string>
-    <string name="menu_delete_text_spot">delete spot</string>
-    <string name="menu_change_text_picture">change your photo</string>
-    <string name="menu_delete_text_picture">delete your photo</string>
     <string name="logout">Log out</string>
+
+    <string name="dialog_fragment_message">Do you want to delete</string>
+    <string name="dialog_fragment_positive_button_text">Delete</string>
+    <string name="dialog_fragment_negative_button_text">Cancel</string>
+    <string name="dialog_fragment_class_exception_text">must implement DeleteDialogFragmentListener</string>
+    <string name="dialog_tag_delete">createDialogFragment</string>
+    <string name="dialog_key_position">position</string>
+    <string name="dialog_key_name">name</string>
+
+    <string name="edit_text_name_hint_text">Name of location</string>
+    <string name="edit_text_description_hint_text">Description for the location</string>
+    <string name="add_activity_switch">make your spot public</string>
+    <string name="add_activity_text_view_no_picture">Your Spot has no picture yet. Create one.</string>
+    <string name="create_button_text">Save Spot</string>
+
+    <string name="personal_adapter_your_spot_public">public</string>
+    <string name="personal_adapter_your_spot_private">private</string>
+    <string name="personal_adapter_other_spot">this is a spot from another person</string>
+
+    <string name="toast_no_name">spots must have a name</string>
+    <string name="toast_not_your_spot_delete">your only can delete your own spots</string>
+    <string name="toast_not_your_spot_edit">your only can edit your own spots</string>
+    <string name="toast_GPS_permission">location permission is necessary to create a spot</string>
+
     <string name="preference_key_wlan_own">pre_wlan_own</string>
     <string name="preference_key_wlan_external">pre_wlan_external</string>
     <string name="preference_key_download_own">pre_download_own</string>
@@ -47,4 +48,19 @@
     <string name="preference_title_wlan_external">download spots form others only with wifi</string>
     <string name="preference_title_download_own">download your spots</string>
     <string name="preference_title_download_external">download spots form other users</string>
+    <string name="settings_title">Settings</string>
+
+    <string name="menu_edit_text_spot">Edit spot</string>
+    <string name="menu_delete_text_spot">Delete spot</string>
+    <string name="menu_change_text_picture">Change your photo</string>
+    <string name="menu_delete_text_picture">Delete your photo</string>
+
+    <string name="action_bar_menu_title_maps">Maps</string>
+    <string name="action_bar_menu_title_create">Create a new spot</string>
+    <string name="action_bar_menu_title_logout">Logout</string>
+    <string name="action_bar_menu_title_settings">Settings</string>
+
+    <string name="key_result_spot">resultSpot</string>
+    <string name="key_edit_spot">editSpot</string>
+    <string name="log_key">TAG</string>
 </resources>

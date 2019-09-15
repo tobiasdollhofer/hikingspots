@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -39,12 +40,15 @@ import java.util.Date;
 import java.util.Locale;
 
 import de.ur.hikingspots.Authentication.LoginActivity;
+import de.ur.hikingspots.MainActivity.MainActivity;
 import de.ur.hikingspots.Map.MapsActivity;
+import de.ur.hikingspots.Settings.SettingsActivity;
 
 public class AddActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private Button createButton, photoButton;
+    private Button createButton;
+    //private Button photoButton;
     private EditText nameEditText, descriptionEditText;
     private ImageView imagePreview;
     private Switch publicPrivateSwitch;
@@ -53,6 +57,7 @@ public class AddActivity extends AppCompatActivity {
     private Spot spot;
     private ProgressBar progressBar;
     private TextView createPictureTextView;
+    private byte[] photoByte;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +68,7 @@ public class AddActivity extends AppCompatActivity {
         Intent receivedIntent = getIntent();
         Bundle bundle = receivedIntent.getExtras();
         if (bundle != null) {
-            spot = bundle.getParcelable(Constants.KEY_EDIT_SPOT);
+            spot = bundle.getParcelable(getString(R.string.key_edit_spot));
             setupInformation();
             setupOnClickListenerEdit();
         }
@@ -89,7 +94,7 @@ public class AddActivity extends AppCompatActivity {
 
     private void setupViews(){
         createButton = findViewById(R.id.create_button);
-        photoButton = findViewById(R.id.add_photo_button);
+        //photoButton = findViewById(R.id.add_photo_button);
         nameEditText = findViewById(R.id.edit_text_name);
         descriptionEditText = findViewById(R.id.edit_text_description);
         imagePreview = findViewById(R.id.image_preview);
@@ -100,6 +105,7 @@ public class AddActivity extends AppCompatActivity {
         registerForContextMenu(imagePreview);
     }
 
+    //------------------------setup actionbar-------------------------------------------------------
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -141,9 +147,17 @@ public class AddActivity extends AppCompatActivity {
             case R.id.menu_item_logout_add_activity:
                 logout();
 
+            case R.id.menu_item_settings_add_activity:
+                openSetting();
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void openSetting(){
+        Intent intent = new Intent(AddActivity.this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     private void logout(){
@@ -158,12 +172,12 @@ public class AddActivity extends AppCompatActivity {
                 uploadNewSpot();
             }
         });
-        photoButton.setOnClickListener(new View.OnClickListener() {
+        /*photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
             }
-        });
+        });*/
         createPictureTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,7 +190,7 @@ public class AddActivity extends AppCompatActivity {
         spot = getNewSpot();
         if (spot != null) {
             //TODO: implement upload
-            setupIntentAndFinishNew();
+            setupIntentAndFinish();
         }
     }
 
@@ -192,12 +206,11 @@ public class AddActivity extends AppCompatActivity {
             boolean spotPublic = publicPrivateSwitch.isChecked();
             if (!descriptionEditText.getText().toString().equals("")){
                 spotDescription = descriptionEditText.getText().toString().trim();
-                String asdf = mAuth.getCurrentUser().getUid();
             }
             else {
                 spotDescription = null;
             }
-            Spot spot = new Spot(spotName, spotDescription, currentPhotoPath, spotPublic, mAuth.getCurrentUser().getUid(), photoURISpot, spotLocation);
+            Spot spot = new Spot(spotName, spotDescription, spotPublic, mAuth.getCurrentUser().getUid(), photoURISpot, spotLocation/*, photoByte*/);
             return spot;
         }
         else {
@@ -207,12 +220,12 @@ public class AddActivity extends AppCompatActivity {
     }
 
     //TODO: call method when upload is finished
-    private void setupIntentAndFinishNew(){
+    /*private void setupIntentAndFinishNew(){
         Intent resultIntent = new Intent();
-        resultIntent.putExtra( Constants.KEY_RESULT_SPOT, spot);
+        resultIntent.putExtra(getString(R.string.key_result_spot), spot);
         setResult(RESULT_OK, resultIntent);
         finish();
-    }
+    }*/
 
 
 
@@ -256,6 +269,70 @@ public class AddActivity extends AppCompatActivity {
 
 
 
+
+    //-------------------------code used to edit spot-----------------------------------------------
+    private void setupInformation(){
+        nameEditText.setText(spot.getSpotName());
+        descriptionEditText.setText(spot.getSpotDescription());
+        if (spot.getSpotPublic() == Constants.SPOT_IS_PUBLIC){
+            publicPrivateSwitch.setChecked(true);
+        }
+        if (spot.getByteArray().length != 1){
+            createPictureTextView.setVisibility(View.INVISIBLE);
+            Bitmap bitmap = null;
+            bitmap = BitmapFactory.decodeByteArray(spot.getByteArray(), 0, spot.getByteArray().length);
+            imagePreview.setImageBitmap(bitmap);
+        }
+    }
+
+    private void setupOnClickListenerEdit(){
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadChanges();
+            }
+        });
+        /*photoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        });*/
+        createPictureTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+                //spot.setByteArray(new byte[0]);
+            }
+        });
+    }
+
+    private void uploadChanges(){
+        changeData();
+        //TODO: implement spot update with editSpot
+        setupIntentAndFinish();
+    }
+
+    private void changeData(){
+        spot.setSpotName(nameEditText.getText().toString().trim());
+        spot.setSpotDescription(descriptionEditText.getText().toString().trim());
+        spot.setPhotoURI(photoURISpot);
+        spot.setByteArray(photoByte);
+        spot.setSpotPublic(publicPrivateSwitch.isChecked());
+    }
+
+    // --------------------code used by both--------------------------------------------------------
+
+    //TODO: call method when update is finished
+    private void setupIntentAndFinish(){
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(getString(R.string.key_result_spot), spot);
+        setResult(RESULT_OK, resultIntent);
+        finish();
+    }
+
+    //--------------------------photo function------------------------------------------------------
+
     private void takePicture(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -288,58 +365,20 @@ public class AddActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if ((requestCode == Constants.REQUEST_CODE_FOR_PHOTO) && (resultCode == RESULT_OK)){
-            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
-            imagePreview.setImageBitmap(bitmap);
-            photoButton.setText(R.string.change_photo_button_text);
+            Bitmap receivedBitmap = BitmapFactory.decodeFile(currentPhotoPath);
+            //imagePreview.setImageBitmap(bitmap);
+            //photoButton.setText(R.string.change_photo_button_text);
             createPictureTextView.setVisibility(View.INVISIBLE);
+            byte[] byteArray = getBytesFromBitmap(receivedBitmap);
+            Bitmap showBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            imagePreview.setImageBitmap(showBitmap);
+            photoByte = byteArray;
         }
     }
 
-
-    //-------------------------code used to edit spot-----------------------------------------------
-    private void setupInformation(){
-        nameEditText.setText(spot.getSpotName());
-        descriptionEditText.setText(spot.getSpotDescription());
-        imagePreview.setImageURI(spot.getPhotoURI());
-        if (spot.getSpotPublic() == Constants.SPOT_IS_PUBLIC){
-            publicPrivateSwitch.setChecked(true);
-        }
-    }
-
-    private void setupOnClickListenerEdit(){
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadChanges();
-            }
-        });
-        photoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
-    }
-
-    private void uploadChanges(){
-        changeData();
-        //TODO: implement spot update with editSpot
-        setupIntentAndFinishUpdate();
-    }
-
-    private void changeData(){
-        spot.setSpotName(nameEditText.getText().toString().trim());
-        spot.setSpotDescription(descriptionEditText.getText().toString().trim());
-        spot.setCurrentPhotoPath(currentPhotoPath);
-        spot.setPhotoURI(photoURISpot);
-        spot.setSpotPublic(publicPrivateSwitch.isChecked());
-    }
-
-    //TODO: call method when update is finished
-    private void setupIntentAndFinishUpdate(){
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(Constants.KEY_RESULT_SPOT, spot);
-        setResult(RESULT_OK, resultIntent);
-        finish();
+    public byte[] getBytesFromBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+        return stream.toByteArray();
     }
 }

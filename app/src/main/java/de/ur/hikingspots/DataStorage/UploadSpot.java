@@ -35,7 +35,7 @@ public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
 
         Map<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("UID", currentUser.getUid());
-        dataMap.put("currentPhotoPath", spots[0].getCurrentPhotoPath());
+        //dataMap.put("currentPhotoPath", spots[0].getCurrentPhotoPath());
         dataMap.put("spotName", spots[0].getSpotName());
         dataMap.put("spotDescription", spots[0].getSpotDescription());
         dataMap.put("spotPublic", spots[0].getSpotPublic());

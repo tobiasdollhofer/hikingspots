@@ -185,8 +185,8 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
 
     private void openDeleteDialog(int position){
         if (mAuth.getCurrentUser().getUid().equals(spotList.get(position).getFirebaseUID())) {
-            DialogFragment dialog = DeleteDialogFragment.newInstance(position, spotList.get(position).getSpotName());
-            dialog.show(getSupportFragmentManager(), Constants.DIALOG_TAG_DELETE);
+            DialogFragment dialog = DeleteDialogFragment.newInstance(position, spotList.get(position).getSpotName(), this);
+            dialog.show(getSupportFragmentManager(), getString(R.string.dialog_tag_delete));
         }
         else {
             Toast.makeText(getApplicationContext(), getString(R.string.toast_not_your_spot_delete), Toast.LENGTH_SHORT).show();
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     private void openAddActivityToEdit(int positionOfSpot){
         if (mAuth.getCurrentUser().getUid().equals(spotList.get(positionOfSpot).getFirebaseUID())) {
             Intent goToAddActivityEditSpot = new Intent(MainActivity.this, AddActivity.class);
-            goToAddActivityEditSpot.putExtra(Constants.KEY_EDIT_SPOT, spotList.get(positionOfSpot));
+            goToAddActivityEditSpot.putExtra(getString(R.string.key_edit_spot), spotList.get(positionOfSpot));
             spotList.remove(positionOfSpot);
             startActivityForResult(goToAddActivityEditSpot, Constants.REQUEST_CODE_FOR_ADD_ACTIVITY);
         }
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == Constants.REQUEST_CODE_FOR_ADD_ACTIVITY && resultCode == RESULT_OK){
             Bundle extras = data.getExtras();
-            Spot newSpot = (Spot) extras.getParcelable(Constants.KEY_RESULT_SPOT);
+            Spot newSpot = (Spot) extras.getParcelable(getString(R.string.key_result_spot));
             spotList.add(newSpot);
             //new UploadSpot().execute(newSpot);
             adapter.notifyDataSetChanged();
@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                         String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
 
                         Uri photoURI = null;
-                        Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, false, currentUser.getUid(), photoURI, spotLocation);
+                        Spot spot = new Spot( spotName, spotDescription, false, currentUser.getUid(), photoURI, spotLocation);
                         downloadImage(spot, documentSnapshot.getId());
                         downloadedSpots.add(spot);
                     }
@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                         String userUID = (String) documentMap.get("UID");
                         Uri photoURI = null;
 
-                        Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, true, userUID, photoURI, spotLocation);
+                        Spot spot = new Spot( spotName, spotDescription,true, userUID, photoURI, spotLocation);
                         downloadImage(spot, documentSnapshot.getId());
                         downloadedSpots.add(spot);
                     }

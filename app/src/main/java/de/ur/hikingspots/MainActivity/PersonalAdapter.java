@@ -50,20 +50,20 @@ public class PersonalAdapter extends ArrayAdapter<Spot> {
             ImageView imageView = v.findViewById(R.id.imageView);
             TextView textViewOwnerOfSpot = v.findViewById(R.id.text_view_owner);
             name.setText(spot.getSpotName());
-            if (spot.getByteArray().length == 1){
+            if (spot.getByteArray().length != 0){
                 Bitmap bitmap = null;
                 bitmap = BitmapFactory.decodeByteArray(spot.getByteArray(), 0, spot.getByteArray().length);
                 imageView.setImageBitmap(bitmap);
             }
-            else if (spot.getCurrentPhotoPath() != null) {
+            /*else if (spot.getCurrentPhotoPath() != null) {
                 Bitmap bitmap = null;
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), spot.getPhotoURI());
                 } catch (IOException e) {
-                    Log.e(Constants.LOG_KEY, Log.getStackTraceString(e));
+                    Log.e(context.getString(R.string.log_key), Log.getStackTraceString(e));
                 }
                 imageView.setImageBitmap(bitmap);
-            }
+            }*/
             else {
                 imageView.setImageResource(android.R.color.transparent);
             }
