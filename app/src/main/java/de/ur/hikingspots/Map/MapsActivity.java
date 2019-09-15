@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import de.ur.hikingspots.AddActivity;
 import de.ur.hikingspots.Authentication.LoginActivity;
 import de.ur.hikingspots.R;
+import de.ur.hikingspots.Singleton;
 import de.ur.hikingspots.Spot;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -74,7 +75,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18));
 
-        spots = getIntent().getParcelableArrayListExtra("spot");
+        int sync = getIntent().getIntExtra("bigdata:synccode", -1);
+        final ArrayList<Spot> spots = Singleton.get().getLargeData(sync);
+        //spots = getIntent().getParcelableArrayListExtra("spot");
+        spots.size();
         for(Spot spot : spots){
             double lat = spot.getSpotLocation().getLatitude();
             double lgt = spot.getSpotLocation().getLongitude();
