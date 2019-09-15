@@ -47,6 +47,7 @@ import de.ur.hikingspots.Constants;
 import de.ur.hikingspots.Map.MapsActivity;
 import de.ur.hikingspots.R;
 import de.ur.hikingspots.Settings.SettingsActivity;
+import de.ur.hikingspots.Singleton;
 import de.ur.hikingspots.Spot;
 
 public class MainActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogFragmentListener {
@@ -89,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     private void setup(){
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
-        downloadAllPrivateSpots();
-        downloadAllPublicSpots();
         System.out.println("spotlistSize: " + spotList.size());
         adapter = new PersonalAdapter(this, spotList, mAuth.getCurrentUser());
         listView.setAdapter(adapter);
@@ -225,9 +224,13 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     }
 
     private void openMaps(){
-        Intent goToMap = new Intent(MainActivity.this, MapsActivity.class);
+        /*Intent goToMap = new Intent(MainActivity.this, MapsActivity.class);
         goToMap.putParcelableArrayListExtra("spot", spotList);
-        startActivity(goToMap);
+        startActivity(goToMap);*/
+        Intent intent = new Intent(this, MapsActivity.class);
+        int sync = Singleton.get().setLargeData(spotList);
+        intent.putExtra("bigdata:synccode", sync);
+        startActivity(intent);
     }
 
     private void openAddActivityToEdit(int positionOfSpot){
