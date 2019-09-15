@@ -50,7 +50,7 @@ public class PersonalAdapter extends ArrayAdapter<Spot> {
             ImageView imageView = v.findViewById(R.id.imageView);
             TextView textViewOwnerOfSpot = v.findViewById(R.id.text_view_owner);
             name.setText(spot.getSpotName());
-            if (spot.getByteArray() != null){
+            if (spot.getByteArray().length == 1){
                 Bitmap bitmap = null;
                 bitmap = BitmapFactory.decodeByteArray(spot.getByteArray(), 0, spot.getByteArray().length);
                 imageView.setImageBitmap(bitmap);

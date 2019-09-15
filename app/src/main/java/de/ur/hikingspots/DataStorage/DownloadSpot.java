@@ -117,6 +117,7 @@ public class DownloadSpot {
                         String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
                         FirebaseUser ownerOfSpot = null;
                         Uri photoURI = null;
+
                         Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, false, ownerOfSpot, photoURI, spotLocation);
 
                         spots.add(spot);

@@ -30,7 +30,7 @@ public class Spot implements Parcelable {
     private int spotPublic;
     private String firebaseUID;
     private Uri photoURI;
-    private byte[] byteArray;
+    private byte[] byteArray = new byte[0];
 
     public Spot(String spotName, String spotDescription, String currentPhotoPath, boolean spotPublic, String firebaseUID, Uri photoURI, Location location){
         this.spotName = spotName;
@@ -90,6 +90,7 @@ public class Spot implements Parcelable {
         dest.writeString(firebaseUID);
         dest.writeParcelable(photoURI, flags);
         dest.writeByteArray(byteArray);
+
     }
 
 
