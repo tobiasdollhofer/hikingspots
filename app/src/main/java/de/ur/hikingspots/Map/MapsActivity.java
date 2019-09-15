@@ -77,7 +77,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         int sync = getIntent().getIntExtra("bigdata:synccode", -1);
         final ArrayList<Spot> spots = Singleton.get().getLargeData(sync);
-        //spots = getIntent().getParcelableArrayListExtra("spot");
         spots.size();
         for(Spot spot : spots){
             double lat = spot.getSpotLocation().getLatitude();
