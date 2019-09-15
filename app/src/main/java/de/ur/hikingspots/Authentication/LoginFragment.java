@@ -22,7 +22,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import de.ur.hikingspots.MainActivity;
+import de.ur.hikingspots.MainActivity.MainActivity;
 import de.ur.hikingspots.R;
 
 public class LoginFragment extends Fragment{

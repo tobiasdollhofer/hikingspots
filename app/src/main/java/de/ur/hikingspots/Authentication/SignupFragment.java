@@ -27,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.ur.hikingspots.MainActivity;
+import de.ur.hikingspots.MainActivity.MainActivity;
 import de.ur.hikingspots.R;
 
 public class SignupFragment extends Fragment {
