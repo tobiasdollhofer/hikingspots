@@ -3,8 +3,11 @@ package de.ur.hikingspots.MainActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
@@ -16,19 +19,29 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import de.ur.hikingspots.AddActivity;
 import de.ur.hikingspots.Authentication.LoginActivity;
 import de.ur.hikingspots.Constants;
-import de.ur.hikingspots.DataStorage.DownloadSpot;
 import de.ur.hikingspots.Map.MapsActivity;
 import de.ur.hikingspots.R;
 import de.ur.hikingspots.Settings.SettingsActivity;
@@ -58,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
         updateUI(currentUser);
     }
 
@@ -77,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         logoutButton = findViewById(R.id.logout_Button);*/
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
+        downloadAllPrivateSpots();
+        downloadAllPublicSpots();
+        System.out.println("spotlistSize: " + spotList.size());
         adapter = new PersonalAdapter(this, spotList, mAuth.getCurrentUser());
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
@@ -134,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     }
 
     private void downloadOwnSpots(){
+
         //TODO: download own spots
     }
 
@@ -254,5 +272,112 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
             //new UploadSpot().execute(newSpot);
             adapter.notifyDataSetChanged();
         }
+    }
+
+
+    public void downloadAllPrivateSpots(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        db.collection("spots")
+                .whereEqualTo("UID", currentUser.getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                if(task.isSuccessful()){
+                    ArrayList<Spot> downloadedSpots = new ArrayList<Spot>();
+                    QuerySnapshot querySnapshot = task.getResult();
+                    for(DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()){
+                        Map<String, Object> documentMap = documentSnapshot.getData();
+
+                        String spotName = (String) documentMap.get("spotName");
+                        String spotDescription = (String) documentMap.get("spotDescription");
+
+
+                        Location spotLocation = new Location("");
+                        spotLocation.setAltitude(Double.parseDouble(documentMap.get("spotLocationAltitude").toString()));
+                        spotLocation.setLatitude(Double.parseDouble(documentMap.get("spotLocationLatitude").toString()));
+                        spotLocation.setLongitude(Double.parseDouble(documentMap.get("spotLocationLongitude").toString()));
+                        spotLocation.setTime((Long) documentMap.get("time"));
+
+                        String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
+
+                        Uri photoURI = null;
+                        Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, false, currentUser.getUid(), photoURI, spotLocation);
+                        downloadImage(spot, documentSnapshot.getId());
+                        downloadedSpots.add(spot);
+                    }
+                    spotList.addAll(downloadedSpots);
+                    adapter.notifyDataSetChanged();
+                    System.out.println("Size of spotList: " + spotList.size());
+                }
+
+            }
+        });
+
+    }
+
+
+    public void downloadAllPublicSpots(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        db.collection("spots")
+                .whereEqualTo("spotPublic", 1)
+                .whereGreaterThan("UID", currentUser.getUid())
+                .whereLessThan("UID", currentUser.getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    ArrayList<Spot> downloadedSpots = new ArrayList<Spot>();
+                    QuerySnapshot querySnapshot = task.getResult();
+                    for(DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()){
+                        Map<String, Object> documentMap = documentSnapshot.getData();
+
+                        String spotName = (String) documentMap.get("spotName");
+                        String spotDescription = (String) documentMap.get("spotDescription");
+
+                        Location spotLocation = new Location("");
+                        spotLocation.setAltitude(Double.parseDouble(documentMap.get("spotLocationAltitude").toString()));
+                        spotLocation.setLatitude(Double.parseDouble(documentMap.get("spotLocationLatitude").toString()));
+                        spotLocation.setLongitude(Double.parseDouble(documentMap.get("spotLocationLongitude").toString()));
+                        spotLocation.setTime((Long) documentMap.get("time"));
+
+                        String currentPhotoPath = (String) documentMap.get("currentPhotoPath");
+                        String userUID = (String) documentMap.get("UID");
+                        Uri photoURI = null;
+
+                        Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, true, userUID, photoURI, spotLocation);
+                        downloadImage(spot, documentSnapshot.getId());
+                        downloadedSpots.add(spot);
+                    }
+                    spotList.addAll(downloadedSpots);
+                    System.out.println("Size of spotList: " + spotList.size());
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
+
+    private static void downloadImage(final Spot spot, String documentId){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference image = storageRef.child("img/"+ documentId);
+        System.out.println("documentid:" + documentId);
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        image.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                spot.setByteArray(bytes.clone());
+            }
+        });
+
     }
 }

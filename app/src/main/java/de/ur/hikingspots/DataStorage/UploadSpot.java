@@ -43,18 +43,18 @@ public class UploadSpot extends AsyncTask<Spot, Integer, Long> {
         dataMap.put("spotLocationLatitude", spots[0].getSpotLocation().getLatitude());
         dataMap.put("spotLocationAltitude", spots[0].getSpotLocation().getAltitude());
         dataMap.put("time", spots[0].getSpotLocation().getTime());
-       db.collection("spots").add(dataMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-           @Override
-           public void onSuccess(DocumentReference documentReference) {
-               String documentIdString = documentReference.getId();
-               uploadImage(documentIdString, file);
-           }
-       }).addOnFailureListener(new OnFailureListener() {
-           @Override
-           public void onFailure(@NonNull Exception e) {
+        db.collection("spots").add(dataMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                String documentIdString = documentReference.getId();
+                uploadImage(documentIdString, file);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
 
-           }
-       });
+            }
+        });
         return null;
     }
 
