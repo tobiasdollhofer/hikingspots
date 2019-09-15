@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
         updateUI(currentUser);
     }
 
@@ -91,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
         listView = findViewById(R.id.list_view);
         spotList = new ArrayList<Spot>();
         downloadAllPrivateSpots();
+        downloadAllPublicSpots();
+        System.out.println("spotlistSize: " + spotList.size());
         adapter = new PersonalAdapter(this, spotList, mAuth.getCurrentUser());
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
@@ -148,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
     }
 
     private void downloadOwnSpots(){
+
         //TODO: download own spots
     }
 
@@ -284,6 +288,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                 if(task.isSuccessful()){
+                    ArrayList<Spot> downloadedSpots = new ArrayList<Spot>();
                     QuerySnapshot querySnapshot = task.getResult();
                     for(DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()){
                         Map<String, Object> documentMap = documentSnapshot.getData();
@@ -303,9 +308,10 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                         Uri photoURI = null;
                         Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, false, currentUser.getUid(), photoURI, spotLocation);
                         downloadImage(spot, documentSnapshot.getId());
-                        spotList.add(spot);
-                        System.out.println(spot.toString());
+                        downloadedSpots.add(spot);
                     }
+                    spotList.addAll(downloadedSpots);
+                    System.out.println("Size of spotList: " + spotList.size());
                 }
 
             }
@@ -327,6 +333,7 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    ArrayList<Spot> downloadedSpots = new ArrayList<Spot>();
                     QuerySnapshot querySnapshot = task.getResult();
                     for(DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()){
                         Map<String, Object> documentMap = documentSnapshot.getData();
@@ -344,11 +351,12 @@ public class MainActivity extends AppCompatActivity implements DeleteDialogFragm
                         String userUID = (String) documentMap.get("UID");
                         Uri photoURI = null;
 
-                        final Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, true, userUID, photoURI, spotLocation);
+                        Spot spot = new Spot( spotName, spotDescription, currentPhotoPath, true, userUID, photoURI, spotLocation);
                         downloadImage(spot, documentSnapshot.getId());
-                        spotList.add(spot);
-                        System.out.println(spot.toString());
+                        downloadedSpots.add(spot);
                     }
+                    spotList.addAll(downloadedSpots);
+                    System.out.println("Size of spotList: " + spotList.size());
                 }
             }
         });
